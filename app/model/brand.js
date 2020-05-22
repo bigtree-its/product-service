@@ -3,8 +3,15 @@ var mongoose = require('mongoose');
 
 // Define a Schema for our Brand collection
 const BrandSchema = new mongoose.Schema({
-    name: { type: String },
-    slug: { type: String, trim: true }
+    name: String,
+    slug: { type: String, trim: true },
+    logo: String,
+    manufacturer: {
+        name: String,
+        contact: String,
+        address: String,
+        country: String
+    }
 }, {
     timestamps: true
 });

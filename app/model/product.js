@@ -5,17 +5,17 @@ var mongoose = require('mongoose');
 const ProductSchema = new mongoose.Schema({
     name: String, 
     pin: String, // Product Identification Number
+    sku: String, // Stock Keeping Unit
     description: [String],
-    categories: [String],
+    categories: [mongoose.Schema.Types.ObjectId],
     salePrice: Number,
     listPrice: Number,
     discount: Number,
-    sku: String,
     availability: {type: String, enum:['Available', 'Out of Stock']},
     stock: Number,
     expiry: Date,
     slug: { type: String, trim: true },
-    brand: String,
+    brand: mongoose.Schema.Types.ObjectId,
     image: {
         thumbnail: String,
         urls: [String]

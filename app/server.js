@@ -10,11 +10,12 @@ app.use(bodyParser.json())
 
 // Database configurations
 const mongoose = require('mongoose');
-const dbConfig = require('./app/config/database.config');
+const config = require('./config/application-config');
+const port = config.port;
 mongoose.Promise = global.Promise;
 
 // connect to database
-mongoose.connect(dbConfig.url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => { console.log("Successfully connected to database"); })
 .catch(err => {
     console.error("Cannot connect to the database. Exiting now", err);
@@ -27,11 +28,12 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Require routes
-require('./app/route/category')(app);
+require('./route/category')(app);
 // require('./app/route/product.js')(app);
-require('./app/route/brand')(app);
+require('./route/brand')(app);
 
 //Listen for requests
-app.listen(3000, () => {
-    console.log("Server listening on Port 3000");
+app.listen(port, () => {
+    console.log(`Server listening on ${port}`);
+    // console.log('Server listening on Port '+ port);
 });

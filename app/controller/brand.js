@@ -30,21 +30,6 @@ exports.create = (req, res) => {
 
 };
 
-function persist(req, res) {
-    const brand = new Brand({
-        name: req.body.name,
-        slug: req.body.slug || req.body.name.split(" ").join("-").trim().toLowerCase()
-    });
-    // Save Note in the database
-    brand.save()
-        .then(data => {
-            res.status(201).send(data);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Brand."
-            });
-        });
-}
 
 // Retrieve and return all Brands from the database.
 exports.findAll = (req, res) => {
@@ -72,14 +57,14 @@ exports.findOne = (req, res) => {
     Brand.findById(req.params.id)
         .then(brand => {
             if (!brand) {
-                return res.status(404).send({ message: "Brand not found with id " + req.params.id });
+                return brandNotFoundWithId(req, res);
             }
             res.send(brand);
         }
         )
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: "Brand not found with id " + req.params.id });
+                return brandNotFoundWithId(req, res);
             }
             return res.status(500).send({ message: "Error while retrieving Brand with id " + req.params.id });
         });
@@ -87,60 +72,104 @@ exports.findOne = (req, res) => {
 
 // Update a Brand identified by the BrandId in the request
 exports.update = (req, res) => {
-    console.log("Updating brand "+ JSON.stringify(req.body));
+    console.log("Updating brand " + JSON.stringify(req.body));
     // Validate Request
-   if(!req.body) {
-       return res.status(400).send({
-           message: "Brand body can not be empty"
-       });
-   }
-   if(!req.body.name) {
-       return res.status(400).send({
-           message: "Brand name can not be empty"
-       });
-   }
-   // Find Brand and update it with the request body
-   Brand.findByIdAndUpdate(req.params.id, {
-       name: req.body.name,
-       slug: req.body.slug || req.body.name.split(" ").join("-").trim().toLowerCase()
-   }, {new: true})
-   .then(brand => {
-       if(!brand) {
-           return res.status(404).send({
-               message: "Brand not found with id " + req.params.id
-           });
-       }
-       res.send(brand);
-   }).catch(err => {
-       if(err.kind === 'ObjectId') {
-           return res.status(404).send({
-               message: "Brand not found with id " + req.params.id
-           });                
-       }
-       return res.status(500).send({
-           message: "Error updating Brand with id " + req.params.id
-       });
-   });
+    if (!req.body) {
+        return res.status(400).send({message: "Brand body can not be empty"});
+    }
+    if (!req.body.name) {
+        return res.status(400).send({message: "Brand name can not be empty"});
+    }
+    // Find Brand and update it with the request body
+    Brand.findByIdAndUpdate(req.params.id, buildBrandJson(req), { new: true })
+        .then(brand => {
+            if (!brand) {
+                return brandNotFoundWithId(req, res);
+            }
+            res.send(brand);
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return brandNotFoundWithId(req, res);
+            }
+            return res.status(500).send({
+                message: "Error updating Brand with id " + req.params.id
+            });
+        });
 };
 
 // Delete a Brand with the specified BrandId in the request
 exports.delete = (req, res) => {
     Brand.findByIdAndRemove(req.params.id)
-    .then(brand => {
-        if(!brand) {
-            return res.status(404).send({
-                message: "Brand not found with id " + req.params.id
+        .then(brand => {
+            if (!brand) {
+                return brandNotFoundWithId(req, res);
+            }
+            res.send({ message: "Brand deleted successfully!" });
+        }).catch(err => {
+            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                return brandNotFoundWithId(req, res);
+            }
+            return res.status(500).send({
+                message: "Could not delete Brand with id " + req.params.id
             });
-        }
-        res.send({message: "Brand deleted successfully!"});
-    }).catch(err => {
-        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-            return res.status(404).send({
-                message: "Brand not found with id " + req.params.id
-            });                
-        }
-        return res.status(500).send({
-            message: "Could not delete Brand with id " + req.params.id
         });
-    });
 };
+
+/**
+ * Persists new Brand document
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+function persist(req, res) {
+    const brand = buildBrandObject(req);
+    // Save Note in the database
+    brand.save()
+        .then(data => {
+            res.status(201).send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the Brand."
+            });
+        });
+}
+
+/**
+ * Sends 404 HTTP Response with Message
+ * 
+ * @param {*} res 
+ * @param {*} req 
+ */
+function brandNotFoundWithId(req, res) {
+    res.status(404).send({
+        message: "Brand not found with id " + req.params.id
+    });
+}
+
+/**
+ * Builds Brand object from Request
+ * 
+ * @param {*} req 
+ */
+function buildBrandObject(req) {
+    return new Brand({
+        name: req.body.name,
+        slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
+        logo: req.body.logo,
+        manufacturer: req.body.manufacturer
+    });
+}
+
+/**
+ * Builds Brand Json from Request
+ * 
+ * @param {*} req 
+ */
+function buildBrandJson(req) {
+    return {
+        name: req.body.name,
+        slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
+        logo: req.body.logo,
+        manufacturer: req.body.manufacturer
+    };
+}

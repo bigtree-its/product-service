@@ -23,9 +23,9 @@ exports.create = (req, res) => {
             } else if (result) {
                 checkDuplicateAndPersist(req, res);
             } else {
-                console.log("Cannot create category. The parent category " + req.body.parent + " not found");
+                console.log("Cannot create category. The parent category ${req.body.parent} not found");
                 return res.status(400).send({
-                    message: "Cannot create category. The parent category " + req.body.parent + " not found"
+                    message: "Cannot create category. The parent category ${req.body.parent} not found"
                 });
             }
         });
@@ -34,18 +34,17 @@ exports.create = (req, res) => {
     }
 };
 
-
 function checkDuplicateAndPersist(req, res) {
-    console.log("Checking if a Category already exist with name " + req.body.name);
+    console.log("Checking if a Category already exist with name ${req.body.name}");
     Category.exists({ name: req.body.name, parent: req.body.parent }, function (err, result) {
         if (err) {
             return res.status(500).send({
-                message: "Error while finding Category with name " + req.body.name
+                message: "Error while finding Category with name ${req.body.name}"
             });
         }
         else if (result) {
-            console.log("Category already exist with name " + req.body.name);
-            res.status(400).send({ message: "Category already exist with name " + req.body.name });
+            console.log("Category already exist with name ${req.body.name}");
+            res.status(400).send({ message: "Category already exist with name ${eq.body.name}" });
         }
         else {
             persist(req, res);
@@ -53,15 +52,13 @@ function checkDuplicateAndPersist(req, res) {
     });
 }
 
-
-
 // Retrieve and return all categories from the database.
 exports.findAll = (req, res) => {
     console.log("Received request to get all categories");
     Category.find()
         .then(data => {
             if (data) {
-                console.log("Returning " + data.length + " categories.");
+                console.log("Returning ${data.length} categories.");
                 res.send(data);
             } else {
                 console.log("Returning no categories ");
@@ -77,20 +74,20 @@ exports.findAll = (req, res) => {
 
 // Find a single Category with a BrandId
 exports.findOne = (req, res) => {
-    console.log("Received request get a Category with id " + req.params.id);
+    console.log("Received request get a Category with id ${req.params.id}");
     Category.findById(req.params.id)
         .then(Category => {
             if (!Category) {
-                return res.status(404).send({ message: "Category not found with id " + req.params.id });
+                return res.status(404).send({ message: "Category not found with id ${req.params.id}" });
             }
             res.send(Category);
         }
         )
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: "Category not found with id " + req.params.id });
+                return res.status(404).send({ message: "Category not found with id ${req.params.id}" });
             }
-            return res.status(500).send({ message: "Error while retrieving Category with id " + req.params.id });
+            return res.status(500).send({ message: "Error while retrieving Category with id ${req.params.id}" });
         });
 };
 
@@ -109,26 +106,22 @@ exports.update = (req, res) => {
         });
     }
     // Find Category and update it with the request body
-    Category.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
-        parent: req.body.parent
-    }, { new: true })
+    Category.findByIdAndUpdate(req.params.id, buildCategoryJson(req), { new: true })
         .then(Category => {
             if (!Category) {
                 return res.status(404).send({
-                    message: "Category not found with id " + req.params.id
+                    message: "Category not found with id ${req.params.id}"
                 });
             }
             res.send(Category);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "Category not found with id " + req.params.id
+                    message: "Category not found with id ${req.params.id}"
                 });
             }
             return res.status(500).send({
-                message: "Error updating Category with id " + req.params.id
+                message: "Error updating Category with id ${req.params.id}"
             });
         });
 };
@@ -139,18 +132,18 @@ exports.delete = (req, res) => {
         .then(Category => {
             if (!Category) {
                 return res.status(404).send({
-                    message: "Category not found with id " + req.params.id
+                    message: "Category not found with id ${req.params.id}"
                 });
             }
             res.send({ message: "Category deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                 return res.status(404).send({
-                    message: "Category not found with id " + req.params.id
+                    message: "Category not found with id ${req.params.id}"
                 });
             }
             return res.status(500).send({
-                message: "Could not delete Category with id " + req.params.id
+                message: "Could not delete Category with id ${req.params.id}"
             });
         });
 };
@@ -166,7 +159,7 @@ function persist(req, res) {
     // Save Note in the database
     category.save()
         .then(data => {
-            console.log("Persisted Category: " + data._id);
+            console.log("Persisted Category: ${data._id}");
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({
@@ -181,9 +174,19 @@ function persist(req, res) {
  * @param {*} req 
  */
 function buildCategory(req) {
-    return new Category({
+    return new Category(buildCategoryJson(req));
+}
+
+/**
+ * Builds Category JSON incoming Request.
+ * 
+ * @returns Category JSON
+ * @param {*} req 
+ */
+function buildCategoryJson(req) {
+    return {
         name: req.body.name,
         slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
         parent: req.body.parent
-    });
+    };
 }
