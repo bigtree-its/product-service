@@ -17,6 +17,7 @@ const CategorySchema = new mongoose.Schema({
 var Category = mongoose.model('Category', CategorySchema );
 //Ensure mongoose automatically created _id field for the document
 Category._id instanceof mongoose.Types.ObjectId;
+Category.parent instanceof mongoose.Types.ObjectId;
 
 //Export function to create "Category" model class
 module.exports = Category;
