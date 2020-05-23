@@ -58,23 +58,39 @@ function checkDuplicateAndPersist(req, res) {
 
 // Retrieve and return all categories from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all categories");
-    Category.find()
-        .then(data => {
-            if (data) {
-                console.log(`Returning ${data.length} categories.`);
-                res.send(data);
-            } else {
-                console.log("Returning no categories ");
-                res.send({});
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving categories."
+    if (req.query.parent) {
+        findAllByParent(req, res);
+    } else if (req.query.name) {
+        findByName(req, res);
+    } else {
+        console.log("Received request to get all categories");
+        Category.find()
+            .then(data => {
+                if (data) {
+                    console.log(`Returning ${data.length} categories.`);
+                    res.send(data);
+                } else {
+                    console.log("Returning no categories ");
+                    res.send({});
+                }
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving categories."
+                });
             });
-        });
+    }
 };
+
+function findAllByParent(req, res) {
+    console.log(`Received request to get all sub categories of ${req.query.parent}`);
+    Category.find({ parent: req.query.parent }).then(data => {res.send(data);}).catch(err => { res.status(500).send({ message: err.message }) });
+}
+
+function findByName(req, res) {
+    console.log(`Received request to get category ${req.query.name}`);
+    Category.find({ name: req.query.name }).then(data => {res.send(data);}).catch(err => { res.status(500).send({ message: err.message }) });
+}
 
 // Find a single Category with a BrandId
 exports.findOne = (req, res) => {
@@ -153,7 +169,7 @@ function persist(req, res) {
             console.log(`Persisted Category: ${data._id}`);
             res.status(201).send(data);
         }).catch(err => {
-            res.status(500).send({message: err.message || "Some error occurred while creating the Category." });
+            res.status(500).send({ message: err.message || "Some error occurred while creating the Category." });
         });
 }
 
