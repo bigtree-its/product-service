@@ -4,9 +4,6 @@ module.exports = (app) => {
     // Create a new Category
     app.post('/categories', categories.create);
 
-    // Search all categories
-    app.get('/categories/search', categories.search);
-
     // Retrieve all categories
     app.get('/categories', categories.findAll);
 
