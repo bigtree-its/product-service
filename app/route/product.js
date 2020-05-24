@@ -8,7 +8,7 @@ module.exports = (app) => {
     app.get('/products', products.findAll);
 
     // Retrieve a single Product with Id
-    app.get('/products/:id', products.findById);
+    app.get('/products/:id', products.findOne);
 
     // Update a Product with id
     app.put('/products/:id', products.update);

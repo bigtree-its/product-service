@@ -1,11 +1,10 @@
 {
   "name": "products-api-nodejs",
   "version": "1.0.0",
-  "description": "RestAPI for Products",
+  "description": "RestAPI for YouSell Products",
   "main": "app/server.js",
   "scripts": {
-    "start": "node .",
-    "tsc": "tsc",
+    "start": "nodemon  app/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,8 +18,10 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "express-validator": "^6.5.0",
+    "generate-safe-id": "^1.0.3",
     "mongoose": "^5.9.15",
-    "typescript": "^3.9.3",
+    "nodemon": "^2.0.4",
     "underscore": "^1.10.2"
   }
 }

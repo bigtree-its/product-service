@@ -11,6 +11,18 @@ const BrandSchema = new mongoose.Schema({
         contact: String,
         address: String,
         country: String
+    },
+    importer: {
+        name: String,
+        contact: String,
+        address: String,
+        country: String
+    },
+    packer:{
+        name: String,
+        contact: String,
+        address: String,
+        country: String
     }
 }, {
     timestamps: true

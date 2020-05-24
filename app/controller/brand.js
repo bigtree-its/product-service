@@ -5,24 +5,18 @@ exports.create = (req, res) => {
     console.log("Creating new brand " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({
-            message: "Brand body can not be empty"
-        });
+        return res.status(400).send({message: "Brand body can not be empty" });
     }
     if (!req.body.name) {
-        return res.status(400).send({
-            message: "Brand name can not be empty"
-        });
+        return res.status(400).send({ message: "Brand name can not be empty"});
     }
-    console.log("Finding if a brand already exist with name " + req.body.name);
+    console.log(`Finding if a brand already exist with name ${req.body.name}`);
     Brand.exists({ name: req.body.name }, function (err, result) {
         if (err) {
-            return res.status(500).send({
-                message: "Error while finding Brand with name " + req.body.name
-            });
+            return res.status(500).send({ message: `Error while finding Brand with name ${req.body.name}`});
         } else if (result) {
-            console.log("Brand already exist with name " + req.body.name);
-            res.status(400).send({ message: "Brand already exist with name " + req.body.name });
+            console.log(`Brand already exist with name ${req.body.name}`);
+            res.status(400).send({ message: `Brand already exist with name ${eq.body.name}` });
         } else {
             persist(req, res);
         }
@@ -118,12 +112,12 @@ exports.delete = (req, res) => {
 /**
  * Persists new Brand document
  * 
- * @param {*} req 
- * @param {*} res 
+ * @param {Request} req 
+ * @param {Response} res 
  */
 function persist(req, res) {
     const brand = buildBrandObject(req);
-    // Save Note in the database
+    // Save Brand in the database
     brand.save()
         .then(data => {
             res.status(201).send(data);
@@ -137,33 +131,26 @@ function persist(req, res) {
 /**
  * Sends 404 HTTP Response with Message
  * 
- * @param {*} res 
- * @param {*} req 
+ * @param {Request} req 
+ * @param {Response} res 
  */
 function brandNotFoundWithId(req, res) {
-    res.status(404).send({
-        message: "Brand not found with id " + req.params.id
-    });
+    res.status(404).send({message: `Brand not found with id ${req.params.id}`});
 }
 
 /**
  * Builds Brand object from Request
  * 
- * @param {*} req 
+ * @param {Request} req 
  */
 function buildBrandObject(req) {
-    return new Brand({
-        name: req.body.name,
-        slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
-        logo: req.body.logo,
-        manufacturer: req.body.manufacturer
-    });
+    return new Brand(buildBrandJson(req));
 }
 
 /**
  * Builds Brand Json from Request
  * 
- * @param {*} req 
+ * @param {Request} req 
  */
 function buildBrandJson(req) {
     return {
@@ -172,4 +159,15 @@ function buildBrandJson(req) {
         logo: req.body.logo,
         manufacturer: req.body.manufacturer
     };
+}
+
+/**
+ * Returns the slog from the given name
+ * e.g if name = M & S Foods then Slug = m-s-foods
+ * Replaces special characters and replace space with -
+ * 
+ * @param {String} name 
+ */
+function getSlag(name) {
+    return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }

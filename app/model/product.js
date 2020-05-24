@@ -20,30 +20,13 @@ const ProductSchema = new mongoose.Schema({
         thumbnail: String,
         urls: [String]
     },
-    manufacturer: {
-        name: String,
-        contact: String,
-        address: String,
-        country: String
-    },
-    importer: {
-        name: String,
-        contact: String,
-        address: String,
-        country: String
-    },
-    packer:{
-        name: String,
-        contact: String,
-        address: String,
-        country: String
-    },
     shipping: {
         shipper: String,
         instructions: [String]
     },
-    storageInstructions: [String],
+    storage: [String],
     kids: Boolean,
+    edible: Boolean,
     adultsOnly: Boolean
 }, {
     timestamps: true

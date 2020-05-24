@@ -11,14 +11,10 @@ exports.create = (req, res) => {
     console.log("Creating new Category " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({
-            message: "Category body can not be empty"
-        });
+        return res.status(400).send({ message: "Category body can not be empty" });
     }
     if (!req.body.name) {
-        return res.status(400).send({
-            message: "Category name can not be empty"
-        });
+        return res.status(400).send({ message: "Category name can not be empty" });
     }
     if (req.body.parent) {
         if (!mongoose.Types.ObjectId.isValid(req.body.parent)) {
@@ -57,13 +53,12 @@ function checkDuplicateAndPersist(req, res) {
 }
 
 // Retrieve and return all categories from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
     if (req.query.parent) {
-        findAllByParent(req, res);
+        findAllByParent(req, res, next);
     } else if (req.query.name) {
         findByName(req, res);
     } else {
-        console.log("Received request to get all categories");
         Category.find()
             .then(data => {
                 if (data) {
@@ -83,13 +78,19 @@ exports.findAll = (req, res) => {
 };
 
 function findAllByParent(req, res) {
-    console.log(`Received request to get all sub categories of ${req.query.parent}`);
-    Category.find({ parent: req.query.parent }).then(data => {res.send(data);}).catch(err => { res.status(500).send({ message: err.message }) });
+    var parent = req.query.parent;
+    if (!mongoose.Types.ObjectId.isValid(parent)) {
+        console.error(`Parent id ${parent} is not valid ObjectId`);
+        return res.status(400).send({ message: `Parent id ${parent} is not valid ObjectId` });
+    }else{
+        console.log(`Received request to get all sub categories of ${req.query.parent}`);
+        Category.find({ parent: parent }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
+    }
 }
 
 function findByName(req, res) {
     console.log(`Received request to get category ${req.query.name}`);
-    Category.find({ name: req.query.name }).then(data => {res.send(data);}).catch(err => { res.status(500).send({ message: err.message }) });
+    Category.find({ name: req.query.name }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
 }
 
 // Find a single Category with a BrandId
@@ -157,8 +158,8 @@ exports.delete = (req, res) => {
 /**
  * Persists new Category Model 
  * 
- * @param {*} req The HTTP Request 
- * @param {*} res The HTTP Response
+ * @param {Request} req The HTTP Request 
+ * @param {*Response} res The HTTP Response
  */
 function persist(req, res) {
     console.log(`Attempting to persist Category ` + JSON.stringify(req.body));
@@ -185,8 +186,8 @@ function buildCategory(req) {
 /**
  * Builds Category JSON incoming Request.
  * 
- * @returns Category JSON
- * @param {*} req 
+ * @returns {String} Category JSON
+ * @param {Request} req 
  */
 function buildCategoryJson(req) {
     var data;
@@ -198,7 +199,17 @@ function buildCategoryJson(req) {
     }
     return {
         name: data.name,
-        slug: data.slug || data.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
+        slug: data.slug || getSlag(data.name),
         parent: data.parent
     };
+}
+/**
+ * Returns the slog from the given name
+ * e.g if name = M & S Foods then Slug = m-s-foods
+ * Replaces special characters and replace space with -
+ * 
+ * @param {String} name 
+ */
+function getSlag(name) {
+    return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }
