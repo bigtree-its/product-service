@@ -110,14 +110,13 @@ exports.findAll = (req, res) => {
 
 function findByCategory(categories, res) {
     validateCategories(categories, res, function(err, result){
-
         Product.find({ categories: {$in: categories} }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
     });
 }
 
 function findByName(req, res) {
     console.log(`Received request to get product ${req.query.name}`);
-    Product.find({ name: req.query.name }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
+    Product.find({ name: {$regex: '.*' + req.query.name + '.*'} }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
 }
 
 // Find a single Product with a BrandId
