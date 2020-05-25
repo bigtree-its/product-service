@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const querystring = require('querystring');
 
 const app = express();
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -8,7 +9,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 var callLogger = function (req, res, next) {
-    console.log(`Received request for ${req.method} ${req.path}`);
+    let qs = querystring.stringify(req.query);
+    console.log(`Received request for ${req.method} ${req.path} ${qs}`);
     next();
 }
 

@@ -89,7 +89,6 @@ exports.findAll = (req, res) => {
     } else if (req.query.name) {
         findByName(req, res);
     } else {
-        console.log("Received request to get all products");
         Product.find()
             .then(data => {
                 if (data) {
