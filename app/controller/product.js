@@ -6,11 +6,13 @@ const Brand = require('../model/brand');
 const _ = require('underscore');
 //Require Mongoose
 var mongoose = require('mongoose');
+//Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
 
 // Create and Save a new Product
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     console.log("Creating new Product " + JSON.stringify(req.body));
+    throw new Error('Some error');
     // Validate Request
     if (!req.body) {
         return res.status(400).send({ message: "Product body cannot be empty" });
@@ -19,51 +21,56 @@ exports.create = (req, res) => {
         return res.status(400).send({ message: "Product name cannot be empty" });
     }
     if (req.body.categories && req.body.categories.length > 0) {
-        console.log("Categories " + req.body.categories);
-        validateCategories(req.body.categories, res);
-        Category.find({ '_id': { $in: req.body.categories } }, function (err, result) {
-            if (err) {
-                return res.status(400).send({ message: `Some of the Categories : ${req.body.categories} not found.` });
-            } else if (result && result.length == req.body.categories.length) {
-                validateBrand(req, res);
-            } else {
-                return res.status(400).send({ message: `Some of the Categories : ${req.body.categories} not found.` });
+        var categories = _.uniq(req.body.categories);
+        if (!validateCategories(categories, res)) {
+            return res.status(400).send({ message: `Category Id(s) not a valid ObjectId` });
+        }
+        /**
+         * Model.find()..exec() returns Promise.
+         * Promise can be either resolved or rejected
+         * If it rejected then we must catch the rejection reason.
+         * The await keyword converts promise rejections to catchable errors
+         */
+        try {
+            var result = await Category.find().where('_id').in(categories).exec();
+            if (result.length != categories.length) {
+                console.log(`Cannot find one or many categories mentioned [${categories}]`);
+                return res.status(400).send({ message: `Cannot find one or many categories mentioned [${categories}]` });
             }
-        });
-    } else {
-        validateBrand(req, res);
+        } catch (error) {
+            console.log("Error: " + error);
+            return res.status(400).send({ message: `Cannot find one or many categories mentioned [${categories}]` });
+        }
     }
+    this.validateBrand(req, res);
+    checkDuplicateAndPersist(req, res);
 };
 
-function validateBrand(req, res) {
+exports.validateBrand = async (req, res) => {
     var brand = req.body.brand;
     if (brand) {
         if (!mongoose.Types.ObjectId.isValid(brand)) {
             return res.status(400).send({ message: `Brand : ${brand} not valid.` });
         } else {
-            Brand.exists({ _id: brand }, function (err, result) {
-                if (err) {
-                    return res.status(400).send({ message: `Brand : ${brand} not valid.` });
-                } else if (result) {
-                    checkDuplicateAndPersist(req, res);
-                } else {
-                    return res.status(400).send({ message: `Brand : ${brand} not valid.` });
-                }
-            });
+            var records = await Brand.find().where('_id', brand).exec();
+            console.log("Verified brand: " + records);
+            if (!records) {
+                return res.status(400).send({ message: `Brand : ${brand} not valid.` });
+            }
         }
-    } else {
-        return res.status(400).send({ message: `Brand value is mandatory!` });
     }
-}
+};
 
-function validateCategories(categories, res){
+function validateCategories(categories) {
+    console.log("Validating categories " + categories);
     for (let CategoryId of categories) {
         console.log("Validating Category " + CategoryId);
         if (!mongoose.Types.ObjectId.isValid(CategoryId)) {
-            console.error(`Category Id ${CategoryId} is not a valid ObjectId`);
-            return res.status(400).send({ message: `Category Id ${CategoryId} is not a valid ObjectId` });
+            console.log(`Category Id ${CategoryId} is not a valid ObjectId`);
+            return false;
         }
     }
+    return true;
 }
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking for duplicate.. Name: ${req.body.name}`);
@@ -83,39 +90,55 @@ function checkDuplicateAndPersist(req, res) {
 
 // Retrieve and return all products from the database.
 exports.findAll = (req, res) => {
-    if (req.query.categories) {
-        console.log("Search Query "+ req.query.categories)
-        findByCategory(req.query.categories, res);
-    } else if (req.query.name) {
-        findByName(req, res);
-    } else {
-        Product.find()
-            .then(data => {
-                if (data) {
-                    console.log(`Returning ${data.length} products.`);
-                    res.send(data);
-                } else {
-                    console.log("Returning no products ");
-                    res.send({});
-                }
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving products."
-                });
-            });
+    const options = { page: 1, limit: 2 };
+    let query = Product.find();
+    if (req.query.name) {
+        query.where('name', { $regex: '.*' + req.query.name + '.*' })
     }
+    if (req.query.categories) {
+        validateCategories(req.query.categories, res);
+        query.where('categories', { $in: req.query.categories })
+    }
+    Product.aggregatePaginate(query, options, function (err, result) {
+        if (result) {
+            console.log(`Returning ${result.docs.length} products.`);
+            res.send(result);
+        } else if (err) {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving products."
+            });
+        }
+    });
+
+    // if (req.query.categories) {
+    //     console.log("Search Query " + req.query.categories)
+    //     findByCategory(req.query.categories, res);
+    // } else if (req.query.name) {
+    //     findByName(req, res);
+    // } else {
+    //     var aggregate = Product.aggregate();
+    //     Product.aggregatePaginate(aggregate, options, function (err, result) {
+    //         if (result) {
+    //             console.log(`Returning ${result.docs.length} products.`);
+    //             res.send(result);
+    //         } else if (err) {
+    //             res.status(500).send({
+    //                 message: err.message || "Some error occurred while retrieving products."
+    //             });
+    //         }
+    //     });
+    // }
 };
 
 function findByCategory(categories, res) {
-    validateCategories(categories, res, function(err, result){
-        Product.find({ categories: {$in: categories} }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
+    validateCategories(categories, res, function (err, result) {
+        Product.find({ categories: { $in: categories } }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
     });
 }
 
 function findByName(req, res) {
     console.log(`Received request to get product ${req.query.name}`);
-    Product.find({ name: {$regex: '.*' + req.query.name + '.*'} }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
+    Product.find({ name: { $regex: '.*' + req.query.name + '.*' } }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
 }
 
 // Find a single Product with a BrandId

@@ -13,8 +13,31 @@ var callLogger = function (req, res, next) {
     console.log(`Received request for ${req.method} ${req.path} ${qs}`);
     next();
 }
-
+// Add logger middleware before router middleware to express
+// .use(middleware)  is the syntax to add middleware to express
 app.use(callLogger);
+
+app.use(function handleDatabaseError(error, request, response, next) {
+    console.log("Some error has been thrown");
+    if (error instanceof MongoError) {
+        if (error.code === 11000) {
+            return response
+                .status(HttpStatus.CONFLICT)
+                .json({
+                    httpStatus: HttpStatus.CONFLICT,
+                    type: 'MongoError',
+                    message: error.message
+                });
+        } else {
+            return response.status(503).json({
+                httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
+                type: 'MongoError',
+                message: error.message
+            });
+        }
+    }
+    next(error);
+});
 
 // Database configurations
 const mongoose = require('mongoose');

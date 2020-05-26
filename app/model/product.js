@@ -1,5 +1,8 @@
 //Require Mongoose
 var mongoose = require('mongoose');
+//Mongoose Paginate V2
+const mongoosePaginate = require('mongoose-paginate-v2');
+var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
 // Define a Schema for our category collection
 const ProductSchema = new mongoose.Schema({
@@ -31,6 +34,9 @@ const ProductSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+ProductSchema.plugin(aggregatePaginate);
+
 // Compile model from schema
 // When you call mongoose.model() on a schema, Mongoose compiles a model for you.
 // The first argument is the singular name of the collection your model is for. 
