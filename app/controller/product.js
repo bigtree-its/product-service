@@ -88,9 +88,10 @@ function checkDuplicateAndPersist(req, res) {
     });
 }
 
-// Retrieve and return all products from the database.
-exports.findAll = (req, res) => {
-    const options = { page: 1, limit: 2 };
+exports.paginate = (req, res) => {
+    req.query.page = req.query.page || 1;
+    req.query.limit = req.query.limit || 25;
+    const options = { page: req.query.page, limit: req.query.limit };
     let query = Product.find();
     if (req.query.name) {
         query.where('name', { $regex: '.*' + req.query.name + '.*' })
@@ -110,24 +111,29 @@ exports.findAll = (req, res) => {
         }
     });
 
-    // if (req.query.categories) {
-    //     console.log("Search Query " + req.query.categories)
-    //     findByCategory(req.query.categories, res);
-    // } else if (req.query.name) {
-    //     findByName(req, res);
-    // } else {
-    //     var aggregate = Product.aggregate();
-    //     Product.aggregatePaginate(aggregate, options, function (err, result) {
-    //         if (result) {
-    //             console.log(`Returning ${result.docs.length} products.`);
-    //             res.send(result);
-    //         } else if (err) {
-    //             res.status(500).send({
-    //                 message: err.message || "Some error occurred while retrieving products."
-    //             });
-    //         }
-    //     });
-    // }
+}
+
+// Retrieve and return all products from the database.
+exports.findAll = (req, res) => {
+
+    let query = Product.find();
+    if (req.query.name) {
+        query.where('name', { $regex: '.*' + req.query.name + '.*' })
+    }
+    if (req.query.categories) {
+        validateCategories(req.query.categories, res);
+        query.where('categories', { $in: req.query.categories })
+    }
+    Product.find(query, function (err, result) {
+        if (result) {
+            console.log(`Returning ${result.length} products.`);
+            res.send(result);
+        } else if (err) {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving products."
+            });
+        }
+    });
 };
 
 function findByCategory(categories, res) {

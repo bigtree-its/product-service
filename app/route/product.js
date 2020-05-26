@@ -7,6 +7,9 @@ module.exports = (app) => {
     // Retrieve all Product
     app.get('/products', products.findAll);
 
+    // Retrieve all Product
+    app.get('/products/paginate', products.paginate);
+
     // Retrieve a single Product with Id
     app.get('/products/:id', products.findOne);
 
