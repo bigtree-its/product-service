@@ -4,9 +4,8 @@ var mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
-// Define a Schema for our category collection
+// Define a Schema for our product collection
 const ProductSchema = new mongoose.Schema({
-    name: String, 
     pin: String, // Product Identification Number
     sku: String, // Stock Keeping Unit
     description: [String],

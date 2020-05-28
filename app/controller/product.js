@@ -12,7 +12,6 @@ var generateSafeId = require('generate-safe-id');
 // Create and Save a new Product
 exports.create = async (req, res) => {
     console.log("Creating new Product " + JSON.stringify(req.body));
-    throw new Error('Some error');
     // Validate Request
     if (!req.body) {
         return res.status(400).send({ message: "Product body cannot be empty" });
@@ -111,7 +110,7 @@ exports.paginate = (req, res) => {
         }
     });
 
-}
+}   
 
 // Retrieve and return all products from the database.
 exports.findAll = (req, res) => {
@@ -190,7 +189,7 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete a Product with the specified BrandId in the request
+// Deletes a Product with the specified BrandId in the request
 exports.delete = (req, res) => {
     Product.findByIdAndRemove(req.params.id)
         .then(Product => {

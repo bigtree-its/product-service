@@ -1,9 +1,8 @@
 module.exports = (app) => {
     const products = require('../controller/product.js');
+    const { verifyToken } = require('../security/security')
 
-    // Create a new Product
-    app.post('/products', products.create);
-
+    // Public routes
     // Retrieve all Product
     app.get('/products', products.findAll);
 
@@ -13,9 +12,13 @@ module.exports = (app) => {
     // Retrieve a single Product with Id
     app.get('/products/:id', products.findOne);
 
+    // Private routes
+    // Create a new Product
+    app.post('/products', verifyToken, products.create);
+
     // Update a Product with id
-    app.put('/products/:id', products.update);
+    app.put('/products/:id', verifyToken, products.update);
 
     // Delete a Product with id
-    app.delete('/products/:id', products.delete);
+    app.delete('/products/:id', verifyToken, products.delete);
 }
