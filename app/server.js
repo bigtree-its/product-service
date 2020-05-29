@@ -17,6 +17,11 @@ var callLogger = function (req, res, next) {
 // .use(middleware)  is the syntax to add middleware to express
 app.use(callLogger);
 
+process.on('unhandledRejection', (err) => {
+    console.log(err);
+    process.exit(1);
+});
+
 // Database configurations
 const mongoose = require('mongoose');
 const config = require('./config/application-config');
@@ -44,5 +49,4 @@ require('./route/product')(app);
 //Listen for requests
 app.listen(port, () => {
     console.log(`Server listening on ${port}`);
-    // console.log('Server listening on Port '+ port);
 });

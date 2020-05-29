@@ -8,38 +8,35 @@ const _ = require('underscore');
 var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
+// Require Validators
+const { validationResult } = require('express-validator');
+// Require Validation Utils
+const {errorFormatter} = require('./validation');
 
 // Create and Save a new Product
 exports.create = async (req, res) => {
+
     console.log("Creating new Product " + JSON.stringify(req.body));
-    // Validate Request
-    if (!req.body) {
-        return res.status(400).send({ message: "Product body cannot be empty" });
+    const errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        return res.json({ errors: _.uniq(errors.array()) });
     }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Product name cannot be empty" });
-    }
-    if (req.body.categories && req.body.categories.length > 0) {
-        var categories = _.uniq(req.body.categories);
-        if (!validateCategories(categories, res)) {
-            return res.status(400).send({ message: `Category Id(s) not a valid ObjectId` });
-        }
-        /**
-         * Model.find()..exec() returns Promise.
-         * Promise can be either resolved or rejected
-         * If it rejected then we must catch the rejection reason.
-         * The await keyword converts promise rejections to catchable errors
-         */
-        try {
-            var result = await Category.find().where('_id').in(categories).exec();
-            if (result.length != categories.length) {
-                console.log(`Cannot find one or many categories mentioned [${categories}]`);
-                return res.status(400).send({ message: `Cannot find one or many categories mentioned [${categories}]` });
-            }
-        } catch (error) {
-            console.log("Error: " + error);
+    var categories = _.uniq(req.body.categories);
+    /**
+     * Model.find()..exec() returns Promise.
+     * Promise can be either resolved or rejected
+     * If it rejected then we must catch the rejection reason.
+     * The await keyword converts promise rejections to catchable errors
+     */
+    try {
+        var result = await Category.find().where('_id').in(categories).exec();
+        if (result.length != categories.length) {
+            console.log(`Cannot find one or many categories mentioned [${categories}]`);
             return res.status(400).send({ message: `Cannot find one or many categories mentioned [${categories}]` });
         }
+    } catch (error) {
+        console.log("Error: " + error);
+        return res.status(400).send({ message: `Cannot find one or many categories mentioned [${categories}]` });
     }
     this.validateBrand(req, res);
     checkDuplicateAndPersist(req, res);
@@ -47,32 +44,20 @@ exports.create = async (req, res) => {
 
 exports.validateBrand = async (req, res) => {
     var brand = req.body.brand;
-    if (brand) {
-        if (!mongoose.Types.ObjectId.isValid(brand)) {
+    try {
+        var records = await Brand.find().where('_id', brand).exec();
+        console.log("Verified brand: " + records);
+        if (!records) {
             return res.status(400).send({ message: `Brand : ${brand} not valid.` });
-        } else {
-            var records = await Brand.find().where('_id', brand).exec();
-            console.log("Verified brand: " + records);
-            if (!records) {
-                return res.status(400).send({ message: `Brand : ${brand} not valid.` });
-            }
         }
+    } catch (error) {
+        console.log("Error: " + error);
+        return res.status(400).send({ message: `Cannot find BrandId mentioned [${brand}]` });
     }
 };
 
-function validateCategories(categories) {
-    console.log("Validating categories " + categories);
-    for (let CategoryId of categories) {
-        console.log("Validating Category " + CategoryId);
-        if (!mongoose.Types.ObjectId.isValid(CategoryId)) {
-            console.log(`Category Id ${CategoryId} is not a valid ObjectId`);
-            return false;
-        }
-    }
-    return true;
-}
 function checkDuplicateAndPersist(req, res) {
-    console.log(`Checking for duplicate.. Name: ${req.body.name}`);
+    console.log(`Checking for duplicate product: ${req.body.name}`);
     Product.exists({ name: req.body.name }, function (err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Product with name ${req.body.name}` });
@@ -110,7 +95,7 @@ exports.paginate = (req, res) => {
         }
     });
 
-}   
+}
 
 // Retrieve and return all products from the database.
 exports.findAll = (req, res) => {
@@ -134,17 +119,6 @@ exports.findAll = (req, res) => {
         }
     });
 };
-
-function findByCategory(categories, res) {
-    validateCategories(categories, res, function (err, result) {
-        Product.find({ categories: { $in: categories } }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
-    });
-}
-
-function findByName(req, res) {
-    console.log(`Received request to get product ${req.query.name}`);
-    Product.find({ name: { $regex: '.*' + req.query.name + '.*' } }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
-}
 
 // Find a single Product with a BrandId
 exports.findOne = (req, res) => {
@@ -243,7 +217,7 @@ function buildProduct(req) {
  */
 function buildProductJson(req) {
     var data = req.body;
-    var randomId = generateSafeId();
+    var safeId = generateSafeId();
     return {
         name: data.name,
         categories: data.categories,
@@ -251,8 +225,8 @@ function buildProductJson(req) {
         description: data.description,
         storage: data.storage,
         slug: data.slug || getSlag(data.name),
-        pin: data.pin || randomId,
-        sku: data.sku || randomId,
+        pin: data.pin || safeId,
+        sku: data.sku || safeId,
         availability: data.availability || 'Out of Stock',
         salePrice: data.salePrice || 0.00,
         listPrice: data.listPrice || 0.00,

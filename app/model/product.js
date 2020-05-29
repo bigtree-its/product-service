@@ -6,6 +6,7 @@ var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
 // Define a Schema for our product collection
 const ProductSchema = new mongoose.Schema({
+    name: String, // product name
     pin: String, // Product Identification Number
     sku: String, // Stock Keeping Unit
     description: [String],

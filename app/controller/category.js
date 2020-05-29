@@ -10,17 +10,11 @@ var mongoose = require('mongoose');
 exports.create = (req, res) => {
     console.log("Creating new Category " + JSON.stringify(req.body));
     // Validate Request
-    if (!req.body) {
-        return res.status(400).send({ message: "Category body can not be empty" });
-    }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Category name can not be empty" });
+    const errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        return res.json({ errors: _.uniq(errors.array()) });
     }
     if (req.body.parent) {
-        if (!mongoose.Types.ObjectId.isValid(req.body.parent)) {
-            console.error(`Parent id is not valid`);
-            return res.status(400).send({ message: `Parent id is not valid` });
-        }
         Category.exists({ "_id": req.body.parent }, function (err, result) {
             if (err) {
                 return res.status(400).send({ message: `Parent Category: ${req.body.parent} not found.` });
@@ -82,7 +76,7 @@ function findAllByParent(req, res) {
     if (!mongoose.Types.ObjectId.isValid(parent)) {
         console.error(`Parent id ${parent} is not valid ObjectId`);
         return res.status(400).send({ message: `Parent id ${parent} is not valid ObjectId` });
-    }else{
+    } else {
         console.log(`Received request to get all sub categories of ${req.query.parent}`);
         Category.find({ parent: parent }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
     }

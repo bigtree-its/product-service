@@ -13,18 +13,23 @@
     "MongoDB",
     "YouSell"
   ],
-  "author": "",
+  "author": "YouSell Limited",
   "license": "MIT",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-validator": "^6.5.0",
     "generate-safe-id": "^1.0.3",
+    "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.15",
     "mongoose-aggregate-paginate-v2": "^1.0.4",
     "mongoose-paginate-v2": "^1.3.9",
     "nodemon": "^2.0.4",
     "underscore": "^1.10.2"
+  },
+  "devDependencies": {
+    "@hapi/hapi": "^19.1.1"
   }
 }
