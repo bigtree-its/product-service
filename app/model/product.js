@@ -1,7 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
-const mongoosePaginate = require('mongoose-paginate-v2');
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
 // Define a Schema for our product collection
@@ -10,10 +9,11 @@ const ProductSchema = new mongoose.Schema({
     pin: String, // Product Identification Number
     sku: String, // Stock Keeping Unit
     description: [String],
+    tags: [String],
     categories: [mongoose.Schema.Types.ObjectId],
     salePrice: Number,
     listPrice: Number,
-    discount: Number,
+    discount: Number, // Discount in percentage
     availability: {type: String, enum:['Available', 'Out of Stock']},
     stock: Number,
     expiry: Date,

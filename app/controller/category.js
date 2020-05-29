@@ -4,7 +4,8 @@ const Category = require('../model/category');
 const _ = require('underscore');
 //Require Mongoose
 var mongoose = require('mongoose');
-
+// Require Validation Utils
+const { validationResult, errorFormatter } = require('./validation');
 
 // Create and Save a new Category
 exports.create = (req, res) => {

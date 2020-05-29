@@ -8,10 +8,8 @@ const _ = require('underscore');
 var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
-// Require Validators
-const { validationResult } = require('express-validator');
 // Require Validation Utils
-const {errorFormatter} = require('./validation');
+const {validationResult, errorFormatter} = require('./validation');
 
 // Create and Save a new Product
 exports.create = async (req, res) => {
@@ -64,7 +62,7 @@ function checkDuplicateAndPersist(req, res) {
         }
         else if (result) {
             console.log(`Product already exist with name ${req.body.name}`);
-            res.status(400).send({ message: `Product ${req.body.name} already exist.` });
+            res.status(400).send({ message: `Product ${req.body.name} already exist. Pick a new one.` });
         }
         else {
             persist(req, res);

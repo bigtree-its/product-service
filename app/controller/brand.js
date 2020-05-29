@@ -1,19 +1,19 @@
 const Brand = require('../model/brand');
+// Require Validation Utils
+const { validationResult, errorFormatter } = require('./validation');
 
 // Create and Save a new Brand
 exports.create = (req, res) => {
     console.log("Creating new brand " + JSON.stringify(req.body));
     // Validate Request
-    if (!req.body) {
-        return res.status(400).send({message: "Brand body can not be empty" });
-    }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Brand name can not be empty"});
+    const errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        return res.json({ errors: _.uniq(errors.array()) });
     }
     console.log(`Finding if a brand already exist with name ${req.body.name}`);
     Brand.exists({ name: req.body.name }, function (err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Brand with name ${req.body.name}`});
+            return res.status(500).send({ message: `Error while finding Brand with name ${req.body.name}` });
         } else if (result) {
             console.log(`Brand already exist with name ${req.body.name}`);
             res.status(400).send({ message: `Brand already exist with name ${eq.body.name}` });
@@ -69,10 +69,10 @@ exports.update = (req, res) => {
     console.log("Updating brand " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({message: "Brand body can not be empty"});
+        return res.status(400).send({ message: "Brand body can not be empty" });
     }
     if (!req.body.name) {
-        return res.status(400).send({message: "Brand name can not be empty"});
+        return res.status(400).send({ message: "Brand name can not be empty" });
     }
     // Find Brand and update it with the request body
     Brand.findByIdAndUpdate(req.params.id, buildBrandJson(req), { new: true })
@@ -135,7 +135,7 @@ function persist(req, res) {
  * @param {Response} res 
  */
 function brandNotFoundWithId(req, res) {
-    res.status(404).send({message: `Brand not found with id ${req.params.id}`});
+    res.status(404).send({ message: `Brand not found with id ${req.params.id}` });
 }
 
 /**
