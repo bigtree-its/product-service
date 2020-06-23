@@ -11,7 +11,7 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     console.log(`Finding if a brand already exist with name ${req.body.name}`);
-    Brand.exists({ name: req.body.name }, function (err, result) {
+    Brand.exists({ name: req.body.name }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Brand with name ${req.body.name}` });
         } else if (result) {
@@ -54,8 +54,7 @@ exports.findOne = (req, res) => {
                 return brandNotFoundWithId(req, res);
             }
             res.send(brand);
-        }
-        )
+        })
         .catch(err => {
             if (err.kind === 'ObjectId') {
                 return brandNotFoundWithId(req, res);

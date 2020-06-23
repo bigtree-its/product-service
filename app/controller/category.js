@@ -16,7 +16,7 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     if (req.body.parent) {
-        Category.exists({ "_id": req.body.parent }, function (err, result) {
+        Category.exists({ "_id": req.body.parent }, function(err, result) {
             if (err) {
                 return res.status(400).send({ message: `Parent Category: ${req.body.parent} not found.` });
             } else if (result) {
@@ -33,15 +33,13 @@ exports.create = (req, res) => {
 
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if a Category already exist with name ${req.body.name}`);
-    Category.exists({ name: req.body.name }, function (err, result) {
+    Category.exists({ name: req.body.name }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Category with name ${req.body.name}` });
-        }
-        else if (result) {
+        } else if (result) {
             console.log(`Category already exist with name ${req.body.name}`);
             res.status(400).send({ message: `Category ${req.body.name} already exist.` });
-        }
-        else {
+        } else {
             persist(req, res);
         }
     });
@@ -97,8 +95,7 @@ exports.findOne = (req, res) => {
                 return res.status(404).send({ message: `Category not found with id ${req.params.id}` });
             }
             res.send(Category);
-        }
-        )
+        })
         .catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({ message: `Category not found with id ${req.params.id}` });

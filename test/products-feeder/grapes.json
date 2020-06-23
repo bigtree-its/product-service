@@ -1,0 +1,16 @@
+{
+    "_id": "5ee05df79b85f98f52889199",
+    "name": "Grapes",
+    "description":["Weight 250g","Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
+    "storage" : "At home, keep me in the fridge to keep flavour and taste for longer",
+    "brand": "5ec900377745e91f06358618",
+    "categories": [ "5ec6e0637ad05346f7e1724d"],
+    "listPrice": 2.00,
+    "salePrice": 2.00,
+    "stock": 4,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/fruits/grapes-1.jpeg",
+        "large": "https://storage.cloud.google.com/yousell/fruits/grapes-1.jpeg",
+        "additional": ["https://storage.cloud.google.com/yousell/fruits/grapes-2.jpeg", "https://storage.cloud.google.com/yousell/fruits/grapes-3.jpeg"]
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "_id": "5ee05dfe9b85f98f5288919a",
+    "name": "Lemon",
+    "description":["Weight 250g","Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
+    "storage" : "At home, keep me in the fridge to keep flavour and taste for longer",
+    "brand": "5ec900377745e91f06358618",
+    "categories": [ "5ec6e0637ad05346f7e1724d"],
+    "listPrice": 2.00,
+    "salePrice": 3.75,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/fruits/lemon-1.jpg",
+        "large": "https://storage.cloud.google.com/yousell/fruits/lemon-1.jpg",
+        "additional": ["https://storage.cloud.google.com/yousell/fruits/lemon-2.jpeg", "https://storage.cloud.google.com/yousell/fruits/lemon-3.jpeg"]
+    }
+}

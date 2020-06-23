@@ -9,10 +9,10 @@ var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
 // Require Validation Utils
-const {validationResult, errorFormatter} = require('./validation');
+const { validationResult, errorFormatter } = require('./validation');
 
 // Create and Save a new Product
-exports.create = async (req, res) => {
+exports.create = async(req, res) => {
 
     console.log("Creating new Product " + JSON.stringify(req.body));
     const errors = validationResult(req).formatWith(errorFormatter);
@@ -40,7 +40,7 @@ exports.create = async (req, res) => {
     checkDuplicateAndPersist(req, res);
 };
 
-exports.validateBrand = async (req, res) => {
+exports.validateBrand = async(req, res) => {
     var brand = req.body.brand;
     try {
         var records = await Brand.find().where('_id', brand).exec();
@@ -56,15 +56,13 @@ exports.validateBrand = async (req, res) => {
 
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking for duplicate product: ${req.body.name}`);
-    Product.exists({ name: req.body.name }, function (err, result) {
+    Product.exists({ name: req.body.name }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Product with name ${req.body.name}` });
-        }
-        else if (result) {
+        } else if (result) {
             console.log(`Product already exist with name ${req.body.name}`);
             res.status(400).send({ message: `Product ${req.body.name} already exist. Pick a new one.` });
-        }
-        else {
+        } else {
             persist(req, res);
         }
     });
@@ -82,7 +80,7 @@ exports.paginate = (req, res) => {
         validateCategories(req.query.categories, res);
         query.where('categories', { $in: req.query.categories })
     }
-    Product.aggregatePaginate(query, options, function (err, result) {
+    Product.aggregatePaginate(query, options, function(err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} products.`);
             res.send(result);
@@ -92,7 +90,6 @@ exports.paginate = (req, res) => {
             });
         }
     });
-
 }
 
 // Retrieve and return all products from the database.
@@ -106,28 +103,29 @@ exports.findAll = (req, res) => {
         validateCategories(req.query.categories, res);
         query.where('categories', { $in: req.query.categories })
     }
-    Product.find(query, function (err, result) {
-        if (result) {
-            console.log(`Returning ${result.length} products.`);
-            res.send(result);
-        } else if (err) {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving products."
-            });
-        }
+    if (req.query.brands) {
+        validateBrands(req.query.brands, res);
+        query.where('categories', { $in: req.query.categories })
+    }
+    Product.find(query).populate("brand", "name").populate("categories", "name").then(result => {
+        console.log(`Returning ${result.length} products.`);
+        res.send(result);
+    }).catch(error => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving products."
+        });
     });
 };
 
 // Find a single Product with a BrandId
 exports.findOne = (req, res) => {
-    Product.findById(req.params.id)
+    Product.findById(req.params.id).populate("brand", "name").populate("categories", "name")
         .then(Product => {
             if (!Product) {
                 return res.status(404).send({ message: `Product not found with id ${req.params.id}` });
             }
             res.send(Product);
-        }
-        )
+        })
         .catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({ message: `Product not found with id ${req.params.id}` });
@@ -183,7 +181,7 @@ exports.delete = (req, res) => {
  * Persists new Product Model 
  * 
  * @param {Request} req The HTTP Request 
- * @param {*Response} res The HTTP Response
+ * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
     console.log(`Attempting to persist Product ` + JSON.stringify(req.body));
@@ -225,6 +223,7 @@ function buildProductJson(req) {
         slug: data.slug || getSlag(data.name),
         pin: data.pin || safeId,
         sku: data.sku || safeId,
+        picture: data.picture,
         availability: data.availability || 'Out of Stock',
         salePrice: data.salePrice || 0.00,
         listPrice: data.listPrice || 0.00,
