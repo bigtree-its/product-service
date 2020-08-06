@@ -1,0 +1,167 @@
+[{
+        "__v": 0,
+        "_id": "5efa3c08c5af4b751082901d",
+        "children": [],
+        "createdAt": "2020-06-29T19:07:52.816Z",
+        "name": "Vegetables",
+        "slug": "vegetables",
+        "updatedAt": "2020-06-29T19:07:52.816Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3c20d5ee2a755eb3ace5",
+        "children": [],
+        "createdAt": "2020-06-29T19:08:16.208Z",
+        "name": "Fruits",
+        "slug": "fruits",
+        "updatedAt": "2020-06-29T19:08:16.208Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3cf969a48a7626ee26da",
+        "children": [],
+        "createdAt": "2020-06-29T19:11:53.800Z",
+        "name": "Rice",
+        "slug": "rice",
+        "updatedAt": "2020-06-29T19:11:53.800Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3d5369a48a7626ee26db",
+        "children": [],
+        "createdAt": "2020-06-29T19:13:23.131Z",
+        "name": "Cooking",
+        "parent": null,
+        "slug": "cooking",
+        "updatedAt": "2020-06-30T10:49:04.095Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3ec75cb21c77656a6f2d",
+        "children": [],
+        "createdAt": "2020-06-29T19:19:35.930Z",
+        "name": "General Veg",
+        "parent": "5efa3c08c5af4b751082901d",
+        "slug": "general-veg",
+        "updatedAt": "2020-06-29T19:19:35.930Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3ee9bc02bb7782606161",
+        "children": [],
+        "createdAt": "2020-06-29T19:20:09.791Z",
+        "name": "Leaves",
+        "parent": "5efa3c08c5af4b751082901d",
+        "slug": "leaves",
+        "updatedAt": "2020-06-29T19:20:09.791Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f1b3d6d6a77d41afa59",
+        "children": [],
+        "createdAt": "2020-06-29T19:20:59.563Z",
+        "name": "Apples",
+        "parent": "5efa3c20d5ee2a755eb3ace5",
+        "slug": "apples",
+        "updatedAt": "2020-06-29T19:20:59.563Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f25c453b277f15450e7",
+        "children": [],
+        "createdAt": "2020-06-29T19:21:09.527Z",
+        "name": "Bananas",
+        "parent": "5efa3c20d5ee2a755eb3ace5",
+        "slug": "bananas",
+        "updatedAt": "2020-06-29T19:21:09.527Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f2b2a1d40780e2e265b",
+        "children": [],
+        "createdAt": "2020-06-29T19:21:15.247Z",
+        "name": "Grapes",
+        "parent": "5efa3c20d5ee2a755eb3ace5",
+        "slug": "grapes",
+        "updatedAt": "2020-06-29T19:21:15.247Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f42c9f25c7847f2aa23",
+        "children": [],
+        "createdAt": "2020-06-29T19:21:38.619Z",
+        "name": "Raw Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "raw-rice",
+        "updatedAt": "2020-06-29T19:21:38.619Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f4957aa857864516845",
+        "children": [],
+        "createdAt": "2020-06-29T19:21:45.040Z",
+        "name": "Boiled Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "boiled-rice",
+        "updatedAt": "2020-06-29T19:21:45.040Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f4ffb519b7881cda130",
+        "children": [],
+        "createdAt": "2020-06-29T19:21:51.196Z",
+        "name": "Basmati Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "basmati-rice",
+        "updatedAt": "2020-06-29T19:21:51.196Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f58b8203a789ed54b11",
+        "children": [],
+        "createdAt": "2020-06-29T19:22:00.703Z",
+        "name": "Long Grain Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "long-grain-rice",
+        "updatedAt": "2020-06-29T19:22:00.703Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f639e963c78bbd6c8a4",
+        "children": [],
+        "createdAt": "2020-06-29T19:22:11.231Z",
+        "name": "Sticky Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "sticky-rice",
+        "updatedAt": "2020-06-29T19:22:11.231Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f695fd3f678d8e15903",
+        "children": [],
+        "createdAt": "2020-06-29T19:22:17.449Z",
+        "name": "Jeera Rice",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "jeera-rice",
+        "updatedAt": "2020-06-29T19:22:17.449Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efa3f755e907278f585a2b3",
+        "children": [],
+        "createdAt": "2020-06-29T19:22:29.703Z",
+        "name": "Briyani Special",
+        "parent": "5efa3cf969a48a7626ee26da",
+        "slug": "briyani-special",
+        "updatedAt": "2020-06-29T19:22:29.703Z"
+    },
+    {
+        "__v": 0,
+        "_id": "5efb365417e61c821fb426c3",
+        "children": [],
+        "createdAt": "2020-06-30T12:55:48.265Z",
+        "name": "Home & Living",
+        "slug": "home-living",
+        "updatedAt": "2020-06-30T12:55:48.265Z"
+    }
+]

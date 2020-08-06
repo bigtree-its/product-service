@@ -77,6 +77,7 @@ app.use(cors(corsOptionsDelegate))
 require('./route/category')(app);
 require('./route/brand')(app);
 require('./route/product')(app);
+require('./route/department')(app);
 
 //Listen for requests
 app.listen(port, () => {

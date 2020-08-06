@@ -1,0 +1,16 @@
+{
+
+    "name": "Mustard Oil",
+    "description": ["Buy Fresh Indian mustard oil Leaves 15g (approx) for £2.09"],
+    "storage": "At home, keep me in the fridge to keep flavour and taste for longer",
+    "brand": "5ec900377745e91f06358618",
+    "categories": ["5ec6e0637ad05346f7e1724d"],
+    "listPrice": 2.09,
+    "salePrice": 2.09,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/fruits/curry-leave-1.png",
+        "large": "https://storage.cloud.google.com/yousell/fruits/curry-leave-1.png",
+        "additional": ["https://storage.cloud.google.com/yousell/fruits/curry-leave-1.png"]
+    }
+}

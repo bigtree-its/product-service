@@ -18,7 +18,7 @@ module.exports = (app) => {
     app.post('/products',
         // verifyToken, 
         [
-            check('name').notEmpty().isLength({ min: 3, max: 50 }),
+            check('name').notEmpty().isLength({ min: 3, max: 250 }),
             check('brand').exists().isMongoId().withMessage('BrandId is not valid1'),
             check('categories').exists().isMongoId().withMessage('CategoryId is not valid')
         ],
@@ -33,6 +33,6 @@ module.exports = (app) => {
 
     // Delete a Product with id
     app.delete('/products/:id',
-    //  verifyToken,
-      products.delete);
+        //  verifyToken,
+        products.delete);
 }

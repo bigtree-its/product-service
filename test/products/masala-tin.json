@@ -1,0 +1,20 @@
+{
+    "_id": "5efb1a77215e1e7ff1117556",
+    "name": "SpiceBox",
+    "description": ["Masala Dabba - Spice Tin - Spices Set - Gift for Foodie - Gift for Chef - Award Winning Garam Masal", "Wash before use"],
+    "brand": "5ec900377745e91f06358618",
+    "categories": ["5efa3d5369a48a7626ee26db"],
+    "listPrice": 24.50,
+    "salePrice": 24.20,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/masala-box-1.jpg",
+        "large": "https://storage.cloud.google.com/yousell/masala-box-1.jpg",
+        "additional": [
+            "https://storage.cloud.google.com/yousell/masala-box-2.jpg",
+            "https://storage.cloud.google.com/yousell/masala-box-3.jpg",
+            "https://storage.cloud.google.com/yousell/masala-box-4.jpg",
+            "https://storage.cloud.google.com/yousell/masala-box-5.jpg"
+        ]
+    }
+}

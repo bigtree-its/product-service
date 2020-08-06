@@ -11,7 +11,7 @@ module.exports = (app) => {
 
     // Create a new brand
     app.post('/brands',
-        verifyToken,
+        // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
         ],
@@ -19,12 +19,14 @@ module.exports = (app) => {
 
     // Update a brand with id
     app.put('/brands/:id',
-        verifyToken,
+        // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
         ],
         brands.update);
 
     // Delete a brand with id
-    app.delete('/brands/:id', verifyToken, brands.delete);
+    app.delete('/brands/:id',
+        // verifyToken,
+        brands.delete);
 }

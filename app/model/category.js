@@ -5,7 +5,18 @@ var mongoose = require('mongoose');
 const CategorySchema = new mongoose.Schema({
     name: { type: String, required: true },
     slug: { type: String, trim: true },
-    parent: mongoose.Schema.Types.ObjectId
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    },
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department'
+    },
+    children: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    }],
 }, {
     timestamps: true
 });

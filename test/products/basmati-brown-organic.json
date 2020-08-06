@@ -1,0 +1,17 @@
+{
+    "_id": "5efcf3bb804feb8c5d47b936",
+    "name": "Orgnic Brown Basmati Rice",
+    "type": "5efa3f639e963c78bbd6c8a4",
+    "description": ["Weight 1Kg", "Wash before use"],
+    "storage": "At home, keep me in the dry place for longer use",
+    "brand": "5eff1e04ad1a65a23f5277f3",
+    "categories": ["5efa3cf969a48a7626ee26da", "5efa3f4ffb519b7881cda130"],
+    "listPrice": 2.00,
+    "salePrice": 2.20,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/basmati-brown-1.jpg",
+        "large": "https://storage.cloud.google.com/yousell/basmati-brown-1.jpg",
+        "additional": []
+    }
+}

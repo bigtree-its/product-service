@@ -1,0 +1,17 @@
+{
+    "_id": "5efcf40161319a8f76b84998",
+    "name": "Laila Brown Basmati Rice 5kg",
+    "type": "5efa3f4ffb519b7881cda130",
+    "description": ["Weight 5Kg", "Wash before use"],
+    "storage": "At home, keep me in the dry place for longer use",
+    "brand": "5eff1945026bcaa175e99ac3",
+    "categories": ["5efa3cf969a48a7626ee26da", "5efa3f4ffb519b7881cda130"],
+    "listPrice": 2.00,
+    "salePrice": 2.20,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/laila-basmati-brown-1.jpg",
+        "large": "https://storage.cloud.google.com/yousell/laila-basmati-brown-1.jpg",
+        "additional": []
+    }
+}

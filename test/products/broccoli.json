@@ -1,10 +1,10 @@
 {
     "_id": "5ee0860ff6f6b29b83c438ad",
     "name": "Broccoli",
-    "description":["Weight 250g","Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
-    "storage" : "At home, keep me in the fridge to keep flavour and taste for longer",
+    "description": ["Weight 250g", "Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
+    "storage": "At home, keep me in the fridge to keep flavour and taste for longer",
     "brand": "5ec900377745e91f06358618",
-    "categories": [ "5ec6e08b7ad05346f7e1724e"],
+    "categories": ["5efa3c08c5af4b751082901d"],
     "listPrice": 2.00,
     "salePrice": 2.35,
     "picture": {

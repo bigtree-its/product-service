@@ -70,11 +70,8 @@ exports.update = (req, res) => {
     if (!req.body) {
         return res.status(400).send({ message: "Brand body can not be empty" });
     }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Brand name can not be empty" });
-    }
     // Find Brand and update it with the request body
-    Brand.findByIdAndUpdate(req.params.id, buildBrandJson(req), { new: true })
+    Brand.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .then(brand => {
             if (!brand) {
                 return brandNotFoundWithId(req, res);
@@ -156,7 +153,9 @@ function buildBrandJson(req) {
         name: req.body.name,
         slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
         logo: req.body.logo,
-        manufacturer: req.body.manufacturer
+        manufacturer: req.body.manufacturer,
+        exporter: req.body.exporter,
+        importer: req.body.importer
     };
 }
 

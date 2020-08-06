@@ -11,22 +11,28 @@ module.exports = (app) => {
 
     // Create a new Category
     app.post('/categories',
-        verifyToken,
+        // verifyToken,
         [
-            check('name').notEmpty().isLength({ min: 2, max: 20 }),
-            check('parent').optional().isMongoId().withMessage('Parent Category ID is not valid')
+            check('name').notEmpty().isLength({ min: 2, max: 40 }),
+            check('parent').optional().isMongoId().withMessage('Parent Category ID is not valid'),
+            check('department').optional().isMongoId().withMessage('Department ID is not valid')
         ],
         categories.create);
 
     // Update a category with id
     app.put('/categories/:id',
-        verifyToken,
+        // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 }),
-            check('parent').optional().isMongoId().withMessage('Parent Category ID is not valid')
+            check('parent').optional().isMongoId().withMessage('Parent Category ID is not valid'),
+            check('department').optional().isMongoId().withMessage('Department ID is not valid')
         ],
         categories.update);
 
     // Delete a category with id
-    app.delete('/categories/:id', verifyToken, categories.delete);
+    app.delete('/categories/:id',
+        // verifyToken,
+        categories.delete);
+
+    app.delete('/categories', categories.deleteAll);
 }

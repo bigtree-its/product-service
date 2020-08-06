@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
+const { Attribute } = require('./common');
 
 // Define a Schema for our product collection
 const ProductSchema = new mongoose.Schema({
@@ -30,6 +31,9 @@ const ProductSchema = new mongoose.Schema({
         large: String,
         additional: [String]
     },
+    summary: String,
+    type: String,
+    attributes: [Attribute],
     shipping: {
         shipper: String,
         instructions: [String]

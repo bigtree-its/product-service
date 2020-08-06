@@ -1,10 +1,10 @@
 {
     "_id": "5ee05def9b85f98f52889198",
     "name": "Cherry",
-    "description":["Weight 250g","Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
-    "storage" : "At home, keep me in the fridge to keep flavour and taste for longer",
+    "description": ["Weight 250g", "Wash before use", "You should always try to eat at least 5 portions of a variety of fruit and vegetables every day"],
+    "storage": "At home, keep me in the fridge to keep flavour and taste for longer",
     "brand": "5ec900377745e91f06358618",
-    "categories": [ "5ec6e0637ad05346f7e1724d"],
+    "categories": ["5efa3c20d5ee2a755eb3ace5"],
     "listPrice": 2.00,
     "salePrice": 5.15,
     "picture": {

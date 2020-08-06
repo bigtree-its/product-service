@@ -1,0 +1,37 @@
+{
+    "_id": "5eff1b646faf3ba1ed8389dc",
+    "name": "Royal",
+    "slug": "royal",
+    "logo": null,
+    "manufacturer": {
+        "name": "Royal",
+        "email": "mark@laila.com",
+        "mobile": "091818181818",
+        "telephone": "123456789",
+        "address": "Europa House, Europa Way",
+        "city": "Harwich",
+        "postcode": "CO12 4PT",
+        "country": "United Kingdom"
+    },
+    "exporter": {
+        "name": "Bravo",
+        "email": "bravo@exporter.com",
+        "mobile": "43243242343242",
+        "telephone": "3432423424242",
+        "address": "12, Bravo House",
+        "city": "Glasgow",
+        "postcode": "SBC1 4PT",
+        "country": "United Kingdom"
+    },
+    "importer": {
+        "name": "Importer",
+        "email": "import@importer.com",
+        "mobile": "3242334124242",
+        "telephone": "93833636373",
+        "address": "23, Importer House",
+        "city": "London",
+        "postcode": "ABC1 4PT",
+        "country": "United Kingdom"
+    }
+
+}

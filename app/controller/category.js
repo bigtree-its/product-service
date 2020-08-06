@@ -47,10 +47,14 @@ function checkDuplicateAndPersist(req, res) {
 
 // Retrieve and return all categories from the database.
 exports.findAll = (req, res, next) => {
-    if (req.query.parent) {
+    if (req.query.top) {
+        findTop(req, res, next);
+    } else if (req.query.parent) {
         findAllByParent(req, res, next);
     } else if (req.query.name) {
         findByName(req, res);
+    } else if (req.query.department) {
+        findAllByDepartment(req, res);
     } else {
         Category.find()
             .then(data => {
@@ -70,19 +74,48 @@ exports.findAll = (req, res, next) => {
     }
 };
 
+function findTop(req, res) {
+    Category.find({ parent: null }).then(result => {
+        if (result) {
+            console.log(`Returning ${result.length} categories.`);
+            res.send(result);
+        } else {
+            console.log("Returning no categories ");
+            res.send({});
+        }
+    }).catch(err => { res.status(500).send({ message: err.message }) });
+}
+
 function findAllByParent(req, res) {
     var parent = req.query.parent;
-    if (!mongoose.Types.ObjectId.isValid(parent)) {
+    if (mongoose.Types.ObjectId.isValid(parent)) {
+        console.log(`Received request to get all sub categories of ${req.query.parent}`);
+        Category.find({ parent: parent }).then(data => {
+            console.log('Returning ' + data.length + ' sub categories of ' + parent);
+            res.send(data);
+        }).catch(err => { res.status(500).send({ message: err.message }) });
+    } else {
         console.error(`Parent id ${parent} is not valid ObjectId`);
         return res.status(400).send({ message: `Parent id ${parent} is not valid ObjectId` });
+    }
+}
+
+function findAllByDepartment(req, res) {
+    var department = req.query.department;
+    if (mongoose.Types.ObjectId.isValid(department)) {
+        console.log(`Received request to get all categories of department ${department}`);
+        Category.find({ department: department }).then(data => {
+            console.log(`Returning  ${data.length} categories for department ${department}`);
+            res.send(data);
+        }).catch(err => { res.status(500).send({ message: err.message }) });
     } else {
-        console.log(`Received request to get all sub categories of ${req.query.parent}`);
-        Category.find({ parent: parent }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
+        console.error(`Department id ${department} is not valid ObjectId`);
+        return res.status(400).send({ message: `Department id ${parent} is not valid ObjectId` });
     }
 }
 
 function findByName(req, res) {
-    console.log(`Received request to get category ${req.query.name}`);
+    console.log(`Received request to get category with name ${req.query.name}`);
     Category.find({ name: req.query.name }).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
 }
 
@@ -111,11 +144,9 @@ exports.update = (req, res) => {
     if (!req.body) {
         return res.status(400).send({ message: "Category body can not be empty" });
     }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Category name can not be empty" });
-    }
+
     // Find Category and update it with the request body
-    Category.findByIdAndUpdate(req.params.id, buildCategoryJson(req), { new: true })
+    Category.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .then(Category => {
             if (!Category) {
                 return res.status(404).send({ message: `Category not found with id ${req.params.id}` });
@@ -146,6 +177,16 @@ exports.delete = (req, res) => {
             });
         });
 };
+
+exports.deleteAll = (req, res) => {
+    Category.remove().then(result => {
+        res.send({ message: "Deleted all categories" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all Category. ${err.message}`
+        });
+    });
+}
 
 /**
  * Persists new Category Model 
@@ -182,17 +223,21 @@ function buildCategory(req) {
  * @param {Request} req 
  */
 function buildCategoryJson(req) {
-    var data;
-    if (!mongoose.Types.ObjectId.isValid(req.body.parent)) {
-        console.error(`Parent id is not valid. Hence removing it.`);
-        data = _.pick(req.body, 'name', 'slug');
-    } else {
-        data = _.pick(req.body, 'name', 'slug', 'parent')
+    var data = _.pick(req.body, 'name', 'slug', 'parent', 'department')
+    if (data.parent && !mongoose.Types.ObjectId.isValid(data.parent)) {
+        console.debug(`Parent id is not valid. Hence removing it.`);
+        data.parent = "";
     }
+    if (data.department && !mongoose.Types.ObjectId.isValid(data.department)) {
+        console.debug(`Department id is not valid. Hence removing it.`);
+        data.department = "";
+    }
+
     return {
         name: data.name,
-        slug: data.slug || getSlag(data.name),
-        parent: data.parent
+        slug: data.slug || getSlug(data.name),
+        parent: data.parent,
+        department: data.department,
     };
 }
 /**
@@ -202,6 +247,6 @@ function buildCategoryJson(req) {
  * 
  * @param {String} name 
  */
-function getSlag(name) {
+function getSlug(name) {
     return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }

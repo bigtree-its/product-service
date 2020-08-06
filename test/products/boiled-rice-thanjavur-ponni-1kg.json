@@ -1,0 +1,17 @@
+{
+    "_id": "5efc6a461a257f8ac4430c6c",
+    "name": "Thanjavur Ponni Boiled Rice 1kg",
+    "type": "5efa3f4957aa857864516845",
+    "description": ["Weight 1Kg", "Ponni rice is a variety of rice developed by Tamil Nadu Agricultural University in 1986. It is widely cultivated in Tamil Nadu a state in India. This is the boiled vareity where the Raw Paddy is soaked in water tanks at room temperature for many hours, before its boiled and polished"],
+    "storage": "At home, keep me in the dry place for longer use",
+    "brand": "5eff21074c7928a33d5324d7",
+    "categories": ["5efa3f4957aa857864516845", "5efa3cf969a48a7626ee26da"],
+    "listPrice": 2.59,
+    "salePrice": 2.59,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/thanjavur-ponni-boiled-rice-1kg.jpg",
+        "large": "https://storage.cloud.google.com/yousell/thanjavur-ponni-boiled-rice-1kg.jpg",
+        "additional": []
+    }
+}

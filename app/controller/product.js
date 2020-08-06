@@ -141,11 +141,8 @@ exports.update = (req, res) => {
     if (!req.body) {
         return res.status(400).send({ message: "Product body cannot be empty" });
     }
-    if (!req.body.name) {
-        return res.status(400).send({ message: "Product name cannot be empty" });
-    }
     // Find Product and update it with the request body
-    Product.findByIdAndUpdate(req.params.id, buildProductJson(req), { new: true })
+    Product.findByIdAndUpdate(req.params.id, { $set: validate(req) }, { new: true })
         .then(Product => {
             if (!Product) {
                 return res.status(404).send({ message: `Product not found with id ${req.params.id}` });
@@ -217,7 +214,10 @@ function buildProductJson(req) {
     return {
         name: data.name,
         categories: data.categories,
+        summary: data.summary,
+        attributes: data.attributes,
         brand: data.brand,
+        type: data.type,
         description: data.description,
         storage: data.storage,
         slug: data.slug || getSlag(data.name),

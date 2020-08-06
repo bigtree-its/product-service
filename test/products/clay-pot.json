@@ -1,0 +1,17 @@
+{
+    "name": "Terracotta Clay Pot Set",
+    "description": ["Includes Pots, Saucers, Compost Soil, Drainage Gravel and Herb Seeds"],
+    "brand": "5ec900377745e91f06358618",
+    "categories": ["5efb365417e61c821fb426c3"],
+    "listPrice": 10.50,
+    "salePrice": 10.20,
+    "stock": 100,
+    "picture": {
+        "thumbnail": "https://storage.cloud.google.com/yousell/clay-pot-1.jpg",
+        "large": "https://storage.cloud.google.com/yousell/clay-pot-1.jpg",
+        "additional": [
+            "https://storage.cloud.google.com/yousell/clay-pot-2.jpg",
+            "https://storage.cloud.google.com/yousell/clay-pot-3.jpg"
+        ]
+    }
+}
