@@ -41,7 +41,8 @@ const ProductSchema = new mongoose.Schema({
     storage: [String],
     kids: Boolean,
     edible: Boolean,
-    adultsOnly: Boolean
+    adultsOnly: Boolean,
+    featured: Boolean
 }, {
     timestamps: true
 });

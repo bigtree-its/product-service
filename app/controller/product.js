@@ -99,6 +99,9 @@ exports.findAll = (req, res) => {
     if (req.query.name) {
         query.where('name', { $regex: '.*' + req.query.name + '.*' })
     }
+    if (req.query.featured) {
+        query.where('featured', 'true')
+    }
     if (req.query.categories) {
         validateCategories(req.query.categories, res);
         query.where('categories', { $in: req.query.categories })
@@ -116,6 +119,22 @@ exports.findAll = (req, res) => {
         });
     });
 };
+
+// Retrieve and return all products from the database.
+exports.featured = (req, res) => {
+    console.log('Fetching featured product');
+    let query = Product.find();
+    query.where('featured', 'true')
+    Product.find(query).populate("brand", "name").populate("categories", "name").then(result => {
+        console.log(`Returning featured product ${result}`);
+        res.send(result);
+    }).catch(error => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving featured product."
+        });
+    });
+};
+
 
 // Find a single Product with a BrandId
 exports.findOne = (req, res) => {
@@ -141,8 +160,11 @@ exports.update = (req, res) => {
     if (!req.body) {
         return res.status(400).send({ message: "Product body cannot be empty" });
     }
+    if (req.query.brand) {
+        this.validateBrand(req, res);
+    }
     // Find Product and update it with the request body
-    Product.findByIdAndUpdate(req.params.id, { $set: validate(req) }, { new: true })
+    Product.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
         .then(Product => {
             if (!Product) {
                 return res.status(404).send({ message: `Product not found with id ${req.params.id}` });
@@ -230,6 +252,7 @@ function buildProductJson(req) {
         stock: data.stock || 0,
         kids: data.kids || true,
         edible: data.edible || true,
+        featured: data.featured || false,
         adultsOnly: data.adultsOnly || false
     };
 }

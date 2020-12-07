@@ -7,6 +7,9 @@ module.exports = (app) => {
     // Retrieve all Product
     app.get('/products', products.findAll);
 
+    // Retrieve featured Product
+    app.get('/products/featured', products.featured);
+
     // Retrieve all Product
     app.get('/products/paginate', products.paginate);
 
@@ -26,13 +29,8 @@ module.exports = (app) => {
         products.create);
 
     // Update a Product with id
-    app.put('/products/:id',
-        // verifyToken, 
-
-        products.update);
+    app.put('/products/:id', products.update);
 
     // Delete a Product with id
-    app.delete('/products/:id',
-        //  verifyToken,
-        products.delete);
+    app.delete('/products/:id', products.delete);
 }

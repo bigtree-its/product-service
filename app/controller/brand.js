@@ -160,12 +160,12 @@ function buildBrandJson(req) {
 }
 
 /**
- * Returns the slog from the given name
+ * Returns the slug from the given name
  * e.g if name = M & S Foods then Slug = m-s-foods
  * Replaces special characters and replace space with -
  * 
  * @param {String} name 
  */
-function getSlag(name) {
+function getSlug(name) {
     return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }
