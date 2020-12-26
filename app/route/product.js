@@ -33,4 +33,7 @@ module.exports = (app) => {
 
     // Delete a Product with id
     app.delete('/products/:id', products.delete);
+
+    //Delete All -- only for non production and can only be done by an admin
+    app.delete('/products', products.deleteEverything);
 }

@@ -22,6 +22,10 @@ const ProductSchema = new mongoose.Schema({
     stock: Number,
     expiry: Date,
     slug: { type: String, trim: true },
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department'
+    },
     brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand'

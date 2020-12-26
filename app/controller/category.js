@@ -15,20 +15,20 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    if (req.body.parent) {
-        Category.exists({ "_id": req.body.parent }, function(err, result) {
-            if (err) {
-                return res.status(400).send({ message: `Parent Category: ${req.body.parent} not found.` });
-            } else if (result) {
-                checkDuplicateAndPersist(req, res);
-            } else {
-                console.log(`Cannot create category. The parent category ${req.body.parent} not found`);
-                return res.status(400).send({ message: `Cannot create category. The parent category ${req.body.parent} not found` });
-            }
-        });
-    } else {
-        checkDuplicateAndPersist(req, res);
-    }
+    // if (req.body.parent) {
+    //     Category.exists({ "_id": req.body.parent }, function(err, result) {
+    //         if (err) {
+    //             return res.status(400).send({ message: `Parent Category: ${req.body.parent} not found.` });
+    //         } else if (result) {
+    //             checkDuplicateAndPersist(req, res);
+    //         } else {
+    //             console.log(`Cannot create category. The parent category ${req.body.parent} not found`);
+    //             return res.status(400).send({ message: `Cannot create category. The parent category ${req.body.parent} not found` });
+    //         }
+    //     });
+    // } else {
+    // }
+    checkDuplicateAndPersist(req, res);
 };
 
 function checkDuplicateAndPersist(req, res) {
@@ -53,6 +53,8 @@ exports.findAll = (req, res, next) => {
         findAllByParent(req, res, next);
     } else if (req.query.name) {
         findByName(req, res);
+    } else if (req.query.tree) {
+        getCategoryTree(req, res);
     } else if (req.query.department) {
         findAllByDepartment(req, res);
     } else {
@@ -96,22 +98,26 @@ function findAllByParent(req, res) {
         }).catch(err => { res.status(500).send({ message: err.message }) });
     } else {
         console.error(`Parent id ${parent} is not valid ObjectId`);
-        return res.status(400).send({ message: `Parent id ${parent} is not valid ObjectId` });
+        return res.status(400).send({ message: `Parent id ${parent} is not valid` });
     }
 }
 
-function findAllByDepartment(req, res) {
+async function findAllByDepartment(req, res) {
     var department = req.query.department;
     if (mongoose.Types.ObjectId.isValid(department)) {
-        console.log(`Received request to get all categories of department ${department}`);
-        Category.find({ department: department }).then(data => {
-            console.log(`Returning  ${data.length} categories for department ${department}`);
-            res.send(data);
-        }).catch(err => { res.status(500).send({ message: err.message }) });
+        Category.find({ department: req.query.department })
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => { res.status(500).send({ message: err.message }) });
     } else {
-        console.error(`Department id ${department} is not valid ObjectId`);
-        return res.status(400).send({ message: `Department id ${parent} is not valid ObjectId` });
+        console.error(`Department id ${department} is not valid`);
+        return res.status(400).send({ message: `Department id ${department} is not valid` });
     }
+}
+
+function getCategoryTree(req, res) {
+    Category.getChildrenTree({}).then(data => { res.send(data); }).catch(err => { res.status(500).send({ message: err.message }) });
 }
 
 function findByName(req, res) {
