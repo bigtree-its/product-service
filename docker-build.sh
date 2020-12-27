@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t yousell-products:latest .
+docker build -t openbasket/product-service:latest .
