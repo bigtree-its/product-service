@@ -23,8 +23,10 @@ npm dev
 ## Endpoints
 Server URL: http://localhost:8081/products
 
-BasePath: /products
-GET All products : /products
-GET by id: /products/{id}
-PUT by id: /products/{id}
-DELETE by id: /products/{id}
+| Attempt | Endpoint  |
+| :---: | :---: |
+| BasePath | /products |
+| GET All products | /products |
+| GET by id | /products/{id} |
+| PUT by id | /products/{id} |
+| DELETE by id | /products/{id} |
