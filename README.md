@@ -21,8 +21,7 @@ npm dev
 
 
 ## Endpoints
-Server URL:
-http://localhost:8081/products
+Server URL: http://localhost:8081/products
 
 BasePath: /products
 GET All products : /products
