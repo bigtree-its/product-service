@@ -11,11 +11,18 @@ const Address = {
 
 const Attribute = {
     name: String,
+    value: [String],
+}
+
+const NameValue = {
+    name: String,
     value: String,
 }
+
+
 
 const ReturnPolicy = {
 
 }
 
-module.exports = { Address, Attribute, ReturnPolicy }
+module.exports = { Address, Attribute, ReturnPolicy, NameValue }

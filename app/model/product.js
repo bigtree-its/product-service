@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const { Attribute } = require('./common');
+const { NameValue } = require('./common');
 
 // Define a Schema for our product collection
 const ProductSchema = new mongoose.Schema({
@@ -16,10 +17,11 @@ const ProductSchema = new mongoose.Schema({
         ref: 'Category'
     }],
     salePrice: { type: Number },
-    listPrice: { type: Number },
+    costPrice: { type: Number },
     discount: Number, // Discount in percentage
     availability: { type: String, enum: ['Available', 'Out of Stock'] },
     stock: Number,
+    size: String,
     expiry: Date,
     slug: { type: String, trim: true },
     department: {
@@ -38,6 +40,8 @@ const ProductSchema = new mongoose.Schema({
     summary: String,
     type: String,
     attributes: [Attribute],
+    nutritionalInformation: [NameValue],
+    qa: [NameValue],
     shipping: {
         shipper: String,
         instructions: [String]
