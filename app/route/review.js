@@ -16,7 +16,7 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('userEmail').exists().withMessage('User is mandatory'),
-            check('title').exists().withMessage('Title is mandatory '),
+            check('headline').exists().withMessage('Headline is mandatory '),
             check('product').exists().isMongoId().withMessage('Product is not valid')
         ],
         reviews.create);

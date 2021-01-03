@@ -13,19 +13,21 @@ exports.create = (req, res) => {
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
-        return res.json({ errors: _.uniq(errors.array()) });
+        var err = _.uniq(errors.array());
+        console.log('Cannot create review: ' + err);
+        return res.json({ errors: err });
     }
     checkDuplicateAndPersist(req, res);
 };
 
 function checkDuplicateAndPersist(req, res) {
-    console.log(`Checking if a Review already exist with name ${req.body.name}`);
+    console.log(`Checking if a Review already exist for product ${req.body.product} from user ${req.body.userEmail}`);
     Review.exists({ userEmail: req.body.userEmail, product: req.body.product }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Review for product:${req.body.product} from user: ${req.body.userEmail}` });
         } else if (result) {
             console.log(`Review already exist for Product:${req.body.product} from user: ${req.body.userEmail}`);
-            res.status(400).send({ message: `Review already exist for Product:${req.body.product} from user: ${req.body.userEmail}` });
+            res.status(400).send({ message: `You have already reviewed this product` });
         } else {
             persist(req, res);
         }
@@ -155,7 +157,7 @@ function buildReview(req) {
  * @param {Request} req 
  */
 function buildReviewJson(req) {
-    var data = _.pick(req.body, 'userEmail', 'userName', 'product', 'title', 'date', 'stars', 'content')
+    var data = _.pick(req.body, 'userEmail', 'userName', 'product', 'headline', 'date', 'rating', 'content')
     if (!data.date) {
         data.date = new Date();
     }

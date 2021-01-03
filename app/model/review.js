@@ -2,12 +2,12 @@
 var mongoose = require('mongoose');
 // Define a Schema for our Review collection
 const ReviewSchema = new mongoose.Schema({
+    headline: String,
+    content: String,
+    rating: Number,
     date: Date,
     userEmail: String,
     userName: String,
-    title: String,
-    stars: Number,
-    content: String,
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'

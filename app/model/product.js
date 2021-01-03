@@ -18,11 +18,16 @@ const ProductSchema = new mongoose.Schema({
     }],
     salePrice: { type: Number },
     costPrice: { type: Number },
+    tax: Number, // Sale Tax on particular products
     discount: Number, // Discount in percentage
     availability: { type: String, enum: ['Available', 'Out of Stock'] },
     stock: Number,
     size: String,
+    weight: String,
+    colors: [String],
     expiry: Date,
+    availableDate: Date,
+    orderedDate: Date,
     slug: { type: String, trim: true },
     department: {
         type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +53,7 @@ const ProductSchema = new mongoose.Schema({
     },
     storage: [String],
     kids: Boolean,
+    fragile: Boolean,
     edible: Boolean,
     adultsOnly: Boolean,
     featured: Boolean
