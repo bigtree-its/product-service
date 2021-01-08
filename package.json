@@ -1,7 +1,7 @@
 {
-    "name": "products-api-nodejs",
+    "name": "product-service",
     "version": "1.0.0",
-    "description": "RestAPI for YouSell Products",
+    "description": "Microservice for products",
     "main": "app/server.js",
     "scripts": {
         "start": "node  app/server.js",
@@ -12,23 +12,23 @@
         "RestAPI",
         "Products",
         "MongoDB",
-        "YouSell"
+        "openBasket"
     ],
-    "author": "YouSell Limited",
+    "author": "OpenBasket Ltd",
     "license": "MIT",
     "dependencies": {
         "body-parser": "^1.19.0",
         "console-stamp": "^0.2.9",
         "cors": "^2.8.5",
         "express": "^4.17.1",
-        "express-validator": "^6.9.0",
+        "express-validator": "^6.9.2",
         "generate-safe-id": "^1.0.3",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.11.8",
+        "mongoose": "^5.11.10",
         "mongoose-aggregate-paginate-v2": "^1.0.42",
-        "mongoose-mpath": "^2.4.0",
+        "mongoose-mpath": "^2.4.1",
         "mongoose-paginate-v2": "^1.3.13",
-        "nodemon": "^2.0.6",
+        "nodemon": "^2.0.7",
         "underscore": "^1.12.0"
     },
     "devDependencies": {
