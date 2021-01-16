@@ -132,6 +132,9 @@ exports.findAll = (req, res) => {
     if (req.query.featured) {
         query.where('featured', 'true')
     }
+    if (req.query.bestseller) {
+        query.where('bestseller', 'true')
+    }
     if (req.query.categories) {
         console.log(`looking up for categories.. ${req.query.categories}`);
         this.validateCategory(res, req.query.categories);
