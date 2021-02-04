@@ -3,14 +3,16 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
+    const path = process.env.CONTEXT_PATH + '/baskets';
+
     // Retrieve all basket
-    app.get('/baskets', basket.findAll);
+    app.get(path, basket.findAll);
 
     // Retrieve a single basket with Id
-    app.get('/basket/:id', basket.findOne);
+    app.get(path + '/:id', basket.findOne);
 
     // Create a new basket
-    app.post('/basket',
+    app.post(path,
         // verifyToken,
         [
             check('clientIp').notEmpty().isLength({ min: 9, max: 15 }),
@@ -19,7 +21,7 @@ module.exports = (app) => {
         basket.create);
 
     // Update a basket with id
-    app.put('/basket/:id',
+    app.put(path + '/:id',
         // verifyToken, 
         [
             check('clientIp').notEmpty().isLength({ min: 9, max: 15 }),
@@ -28,7 +30,7 @@ module.exports = (app) => {
         basket.update);
 
     // Delete a basket with id
-    app.delete('/basket/:id',
+    app.delete(path + '/:id',
         // verifyToken,
         basket.delete);
 

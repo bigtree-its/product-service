@@ -3,22 +3,24 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
+    const path = process.env.CONTEXT_PATH + '/products';
+
     // Public routes
     // Retrieve all Product
-    app.get('/products', products.findAll);
+    app.get(path, products.findAll);
 
     // Retrieve featured Product
-    app.get('/products/featured', products.featured);
+    app.get(path + '/featured', products.featured);
 
     // Retrieve all Product
-    app.get('/products/paginate', products.paginate);
+    app.get(path + '/paginate', products.paginate);
 
     // Retrieve a single Product with Id
-    app.get('/products/:id', products.findOne);
+    app.get(path + '/:id', products.findOne);
 
     // Private routes
     // Creates a new Product
-    app.post('/products',
+    app.post(path,
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }),
@@ -29,11 +31,11 @@ module.exports = (app) => {
         products.create);
 
     // Update a Product with id
-    app.put('/products/:id', products.update);
+    app.put(path + '/:id', products.update);
 
     // Delete a Product with id
-    app.delete('/products/:id', products.delete);
+    app.delete(path + '/:id', products.delete);
 
     //Delete All -- only for non production and can only be done by an admin
-    app.delete('/products', products.deleteEverything);
+    app.delete(path, products.deleteEverything);
 }

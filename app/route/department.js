@@ -3,14 +3,16 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
+    const path = process.env.CONTEXT_PATH + "/departments";
+
     // Retrieve all departments
-    app.get('/departments', departments.findAll);
+    app.get(path, departments.findAll);
 
     // Retrieve a single category with Id
-    app.get('/departments/:id', departments.findOne);
+    app.get(path + '/:id', departments.findOne);
 
     // Create a new Category
-    app.post('/departments',
+    app.post(path,
         // verifyToken,
         [
             check('name').notEmpty().isLength({ min: 2, max: 30 })
@@ -18,7 +20,7 @@ module.exports = (app) => {
         departments.create);
 
     // Update a category with id
-    app.put('/departments/:id',
+    app.put(path + '/:id',
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 30 })
@@ -26,9 +28,9 @@ module.exports = (app) => {
         departments.update);
 
     // Delete a category with id
-    app.delete('/departments/:id',
+    app.delete(path + '/:id',
         // verifyToken,
         departments.delete);
 
-    app.delete('/departments', departments.deleteAll);
+    app.delete(path, departments.deleteAll);
 }

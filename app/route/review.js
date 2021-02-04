@@ -3,16 +3,18 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
+    const path = process.env.CONTEXT_PATH + "/reviews";
+
     // Public routes
     // Retrieve all Review
-    app.get('/reviews', reviews.findAll);
+    app.get(path, reviews.findAll);
 
     // Retrieve a single Review with Id
-    app.get('/reviews/:id', reviews.findOne);
+    app.get(path + '/:id', reviews.findOne);
 
     // Private routes
     // Creates a new Review
-    app.post('/reviews',
+    app.post(path,
         // verifyToken, 
         [
             check('userEmail').exists().withMessage('User is mandatory'),
@@ -22,11 +24,11 @@ module.exports = (app) => {
         reviews.create);
 
     // Update a Review with id
-    app.put('/reviews/:id', reviews.update);
+    app.put(path + '/:id', reviews.update);
 
     // Delete a Review with id
-    app.delete('/reviews/:id', reviews.delete);
+    app.delete(path + '/:id', reviews.delete);
 
     //Delete All -- only for non production and can only be done by an admin
-    app.delete('/reviews', reviews.deleteAll);
+    app.delete(path, reviews.deleteAll);
 }

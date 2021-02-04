@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const querystring = require('querystring');
@@ -27,12 +28,10 @@ process.on('unhandledRejection', (err) => {
 
 // Database configurations
 const mongoose = require('mongoose');
-const config = require('./config/application-config');
-const port = config.port;
 mongoose.Promise = global.Promise;
 
 // connect to database
-mongoose.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(() => { console.log("Successfully connected to database"); })
     .catch(err => {
         console.error("Cannot connect to the database. Exiting now", err);
@@ -82,6 +81,7 @@ require('./route/review')(app);
 app.use('/health', require('./route/healthcheck'));
 
 //Listen for requests
-app.listen(port, () => {
-    console.log(`Server listening on ${port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server listening on ${process.env.PORT}`);
+    console.log(`Server Context Path ${process.env.CONTEXT_PATH}`);
 });

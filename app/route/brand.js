@@ -3,14 +3,16 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
+    const path = process.env.CONTEXT_PATH + '/brands';
+
     // Retrieve all brand
-    app.get('/brands', brands.findAll);
+    app.get(path, brands.findAll);
 
     // Retrieve a single brand with Id
-    app.get('/brands/:id', brands.findOne);
+    app.get(path + '/:id', brands.findOne);
 
     // Create a new brand
-    app.post('/brands',
+    app.post(path,
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
@@ -18,7 +20,7 @@ module.exports = (app) => {
         brands.create);
 
     // Update a brand with id
-    app.put('/brands/:id',
+    app.put(path + '/:id',
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
@@ -26,7 +28,7 @@ module.exports = (app) => {
         brands.update);
 
     // Delete a brand with id
-    app.delete('/brands/:id',
+    app.delete(path + '/:id',
         // verifyToken,
         brands.delete);
 }
