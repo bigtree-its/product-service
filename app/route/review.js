@@ -3,7 +3,7 @@ module.exports = (app) => {
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + "/reviews";
+    const path = process.env.CONTEXT_PATH_REVIEWS + "/reviews";
 
     // Public routes
     // Retrieve all Review
