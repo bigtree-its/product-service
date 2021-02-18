@@ -47,30 +47,36 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Require routes
 
 // Enable pre-flight across-the-board
-var whitelist = ['http://localhost:3000', 'http://localhost']
-var corsOptionsDelegate = function(req, callback) {
-    var corsOptions;
-    if (whitelist.indexOf(req.header('Origin')) !== -1) {
-        corsOptions = {
-                origin: true,
-                methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-                preflightContinue: false,
-                optionsSuccessStatus: 204,
-                "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
-            } // reflect (enable) the requested origin in the CORS response
-    } else {
-        corsOptions = {
-                origin: false,
-                methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-                preflightContinue: false,
-                optionsSuccessStatus: 204,
-                "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
-            } // disable CORS for this request
-    }
-    callback(null, corsOptions) // callback expects two parameters: error and options
-}
+// var whitelist = ['http://localhost:3000', 'http://localhost']
+// var corsOptionsDelegate = function(req, callback) {
+//     var corsOptions;
+//     if (whitelist.indexOf(req.header('Origin')) !== -1) {
+//         corsOptions = {
+//                 origin: true,
+//                 methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//                 preflightContinue: false,
+//                 optionsSuccessStatus: 204,
+//                 "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
+//             } // reflect (enable) the requested origin in the CORS response
+//     } else {
+//         corsOptions = {
+//                 origin: false,
+//                 methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//                 preflightContinue: false,
+//                 optionsSuccessStatus: 204,
+//                 "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
+//             } // disable CORS for this request
+//     }
+//     callback(null, corsOptions) // callback expects two parameters: error and options
+// }
+
 app.options('*', cors())
-app.use(cors(corsOptionsDelegate))
+app.use(function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, HEAD, PUT, PATCH, POST");
+    next();
+})
 
 // Other routes
 require('./route/category')(app);
