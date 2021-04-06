@@ -12,9 +12,9 @@
         "RestAPI",
         "Products",
         "MongoDB",
-        "openBasket"
+        "OpenEcomm"
     ],
-    "author": "OpenBasket Ltd",
+    "author": "OpenEcomm.co.uk",
     "license": "MIT",
     "dependencies": {
         "body-parser": "^1.19.0",

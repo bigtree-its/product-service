@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -p 8081:8080 gcr.io/nodal-formula-295821/openbasket/product-service:v1
+docker run -p 8081:8080 openecomm/product-service:v1

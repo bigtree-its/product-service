@@ -10,14 +10,18 @@ const ProductSchema = new mongoose.Schema({
     name: String, // product name
     pin: String, // Product Identification Number
     sku: String, // Stock Keeping Unit
+    barcode: String,
     description: [String],
     tags: [String],
     categories: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     }],
-    salePrice: { type: Number },
+    price: { type: Number },// Product's original price. Enter a lower value into SalePrice.
+    salePrice: { type: Number }, //To show a reduced price
     costPrice: { type: Number },
+    margin: Number, // 30%
+    profit: Number, // Profit
     tax: Number, // Sale Tax on particular products
     discount: Number, // Discount in percentage
     availability: { type: String, enum: ['Available', 'Out of Stock'] },
@@ -52,6 +56,8 @@ const ProductSchema = new mongoose.Schema({
         instructions: [String]
     },
     storage: [String],
+    status: { type: String, enum: ['Active', 'Draft', 'Discontinued'] },
+    deliveryOptions: { type: String, enum: ['Home Delivery', 'Collection Only'] },
     kids: Boolean,
     fragile: Boolean,
     edible: Boolean,
