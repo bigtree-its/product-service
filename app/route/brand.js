@@ -1,15 +1,15 @@
 module.exports = (app) => {
-    const brands = require('../controller/brand');
+    const collection = require('../controller/brand');
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/brands';
 
     // Retrieve all brand
-    app.get(path, brands.findAll);
+    app.get(path, collection.findAll);
 
     // Retrieve a single brand with Id
-    app.get(path + '/:id', brands.findOne);
+    app.get(path + '/:id', collection.findOne);
 
     // Create a new brand
     app.post(path,
@@ -17,7 +17,7 @@ module.exports = (app) => {
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
         ],
-        brands.create);
+        collection.create);
 
     // Update a brand with id
     app.put(path + '/:id',
@@ -25,10 +25,13 @@ module.exports = (app) => {
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 })
         ],
-        brands.update);
+        collection.update);
 
     // Delete a brand with id
     app.delete(path + '/:id',
         // verifyToken,
-        brands.delete);
+        collection.delete);
+
+    //Delete All 
+    app.delete(path, collection.deleteEverything);
 }

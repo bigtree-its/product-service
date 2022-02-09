@@ -1,4 +1,6 @@
+const uuid = require('node-uuid');
 const Address = {
+    _id: {type: String, default: uuid.v4},
     name: String,
     email: String,
     mobile: String,
@@ -10,11 +12,13 @@ const Address = {
 }
 
 const Attribute = {
+    _id: {type: String, default: uuid.v4},
     name: String,
     value: [String],
 }
 
 const NameValue = {
+    _id: {type: String, default: uuid.v4},
     name: String,
     value: String,
 }

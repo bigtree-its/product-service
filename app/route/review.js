@@ -19,7 +19,7 @@ module.exports = (app) => {
         [
             check('userEmail').exists().withMessage('User is mandatory'),
             check('headline').exists().withMessage('Headline is mandatory '),
-            check('product').exists().isMongoId().withMessage('Product is not valid')
+            check('product').exists().isUUID().withMessage('Product is not valid')
         ],
         reviews.create);
 
@@ -29,6 +29,6 @@ module.exports = (app) => {
     // Delete a Review with id
     app.delete(path + '/:id', reviews.delete);
 
-    //Delete All -- only for non production and can only be done by an admin
-    app.delete(path, reviews.deleteAll);
+    //Delete All 
+    app.delete(path, reviews.deleteEverything);
 }

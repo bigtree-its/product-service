@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const products = require('../controller/product.js');
+    const collection = require('../controller/product.js');
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
@@ -7,16 +7,16 @@ module.exports = (app) => {
 
     // Public routes
     // Retrieve all Product
-    app.get(path, products.findAll);
+    app.get(path, collection.findAll);
 
     // Retrieve featured Product
-    app.get(path + '/featured', products.featured);
+    app.get(path + '/featured', collection.featured);
 
     // Retrieve all Product
-    app.get(path + '/paginate', products.paginate);
+    app.get(path + '/paginate', collection.paginate);
 
     // Retrieve a single Product with Id
-    app.get(path + '/:id', products.findOne);
+    app.get(path + '/:id', collection.findOne);
 
     // Private routes
     // Creates a new Product
@@ -24,18 +24,18 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }),
-            check('brand').exists().isMongoId().withMessage('BrandId is not valid1'),
-            check('categories').exists().isMongoId().withMessage('CategoryId is not valid')
+            check('brand').exists().isUUID().withMessage('BrandId is not valid UUID'),
+            check('categories').exists().isUUID().withMessage('CategoryId is not valid UUID')
         ],
 
-        products.create);
+        collection.create);
 
     // Update a Product with id
-    app.put(path + '/:id', products.update);
+    app.put(path + '/:id', collection.update);
 
     // Delete a Product with id
-    app.delete(path + '/:id', products.delete);
+    app.delete(path + '/:id', collection.delete);
 
     //Delete All -- only for non production and can only be done by an admin
-    app.delete(path, products.deleteEverything);
+    app.delete(path, collection.deleteEverything);
 }

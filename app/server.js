@@ -84,6 +84,9 @@ require('./route/brand')(app);
 require('./route/product')(app);
 require('./route/department')(app);
 require('./route/review')(app);
+require('./route/qa')(app);
+require('./route/carousel')(app);
+require('./route/collection')(app);
 app.use('/health', require('./route/healthcheck'));
 
 //Listen for requests

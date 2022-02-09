@@ -1,5 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
+const uuid = require('node-uuid');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const { Attribute } = require('./common');
@@ -7,6 +8,7 @@ const { NameValue } = require('./common');
 
 // Define a Schema for our product collection
 const ProductSchema = new mongoose.Schema({
+    _id: {type: String, default: uuid.v4},
     name: String, // product name
     pin: String, // Product Identification Number
     sku: String, // Stock Keeping Unit
@@ -14,7 +16,7 @@ const ProductSchema = new mongoose.Schema({
     description: [String],
     tags: [String],
     categories: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'Category'
     }],
     price: { type: Number },// Product's original price. Enter a lower value into SalePrice.
@@ -34,11 +36,11 @@ const ProductSchema = new mongoose.Schema({
     orderedDate: Date,
     slug: { type: String, trim: true },
     department: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'Department'
     },
     brand: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'Brand'
     },
     picture: {
@@ -75,8 +77,6 @@ ProductSchema.plugin(aggregatePaginate);
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
 var Product = mongoose.model('Product', ProductSchema);
-//Ensure mongoose automatically created _id field for the document
-Product._id instanceof mongoose.Types.ObjectId;
 
 //Export function to create "Product" model class
 module.exports = Product;

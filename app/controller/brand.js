@@ -1,4 +1,7 @@
 const Brand = require('../model/brand');
+//Require Underscore JS ( Visit: http://underscorejs.org/#)
+const _ = require('underscore');
+
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
 
@@ -45,10 +48,21 @@ exports.findAll = (req, res) => {
         });
 };
 
+// Deletes all
+exports.deleteEverything = (req, res) => {
+    Brand.remove().then(result => {
+        res.send({ message: "Deleted all brands" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all brands. ${err.message}`
+        });
+    });
+};
+
 // Find a single Brand with a BrandId
 exports.findOne = (req, res) => {
     console.log("Received request get a brand with id " + req.params.id);
-    Brand.findById(req.params.id)
+    Brand.findOne({ _id: req.params.id })
         .then(brand => {
             if (!brand) {
                 return brandNotFoundWithId(req, res);

@@ -13,7 +13,7 @@ var generateSafeId = require('generate-safe-id');
 const { validationResult, errorFormatter } = require('./validation');
 
 // Create and Save a new Product
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
 
     console.log("Creating new Product " + JSON.stringify(req.body));
     /** Check for validation errors */
@@ -39,13 +39,13 @@ exports.create = async(req, res) => {
  * If it rejected then we must catch the rejection reason.
  * The await keyword converts promise rejections to catchable errors
  */
-exports.validateCategory = async(res, categories) => {
+exports.validateCategory = async (res, ...categories) => {
     try {
         var cats = [];
         cats.push(categories);
         var categoriesUniq = _.uniq(cats);
-        console.log(`Verifying category Id's ${categories}`);
-        var result = await Category.find().where('_id').in(categoriesUniq).exec();
+        console.log(`Verifying category Id's ${categoriesUniq}`);
+        var result = await Category.find().where('_id').in(categories).exec();
         if (result.length != categoriesUniq.length) {
             console.log(`Cannot find one or more categories in [${categoriesUniq}]`);
             return res.status(400).send({ message: `Cannot find one or more categories in [${categoriesUniq}]` });
@@ -58,7 +58,7 @@ exports.validateCategory = async(res, categories) => {
     }
 };
 
-exports.validateBrand = async(res, ...brands) => {
+exports.validateBrand = async (res, ...brands) => {
     try {
         var records = await Brand.find().where('_id').in(brands).exec();
         console.log("Verified brand Id(s): " + records);
@@ -71,7 +71,7 @@ exports.validateBrand = async(res, ...brands) => {
     }
 };
 
-exports.validateDepartment = async(res, ...departments) => {
+exports.validateDepartment = async (res, ...departments) => {
     try {
         console.log(`Validating department ${departments}`);
         var records = await Department.find().where('_id').in(departments).exec();
@@ -87,7 +87,7 @@ exports.validateDepartment = async(res, ...departments) => {
 
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if product ${req.body.name} already exist..`);
-    Product.exists({ name: req.body.name }, function(err, result) {
+    Product.exists({ name: req.body.name }, function (err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Product with name ${req.body.name}` });
         } else if (result) {
@@ -111,7 +111,7 @@ exports.paginate = (req, res) => {
         this.validateCategory(res, req.query.categories);
         query.where('categories', { $in: req.query.categories })
     }
-    Product.aggregatePaginate(query, options, function(err, result) {
+    Product.aggregatePaginate(query, options, function (err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} products.`);
             res.send(result);
@@ -127,7 +127,8 @@ exports.paginate = (req, res) => {
 exports.findAll = (req, res) => {
     let query = Product.find();
     if (req.query.name) {
-        query.where('name', { $regex: '.*' + req.query.name + '.*' })
+        // query.where('name', { $regex: '.*' + req.query.name + '.*' })
+        query.where({ name: { '$regex': '.*' + req.query.name + '.*', '$options': 'i' } })
     }
     if (req.query.featured) {
         query.where('featured', 'true')

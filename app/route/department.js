@@ -1,15 +1,15 @@
 module.exports = (app) => {
-    const departments = require('../controller/department');
+    const collection = require('../controller/department');
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + "/departments";
 
     // Retrieve all departments
-    app.get(path, departments.findAll);
+    app.get(path, collection.findAll);
 
     // Retrieve a single category with Id
-    app.get(path + '/:id', departments.findOne);
+    app.get(path + '/:id', collection.findOne);
 
     // Create a new Category
     app.post(path,
@@ -17,7 +17,7 @@ module.exports = (app) => {
         [
             check('name').notEmpty().isLength({ min: 2, max: 30 })
         ],
-        departments.create);
+        collection.create);
 
     // Update a category with id
     app.put(path + '/:id',
@@ -25,12 +25,13 @@ module.exports = (app) => {
         [
             check('name').notEmpty().isLength({ min: 2, max: 30 })
         ],
-        departments.update);
+        collection.update);
 
     // Delete a category with id
     app.delete(path + '/:id',
         // verifyToken,
-        departments.delete);
+        collection.delete);
 
-    app.delete(path, departments.deleteAll);
+    //Delete All 
+    app.delete(path, collection.deleteEverything);
 }

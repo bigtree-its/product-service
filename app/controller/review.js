@@ -54,6 +54,17 @@ exports.findAll = (req, res, next) => {
     }).catch(err => { res.status(500).send({ message: err.message }) });
 };
 
+// Deletes all
+exports.deleteEverything = (req, res) => {
+    Review.remove().then(result => {
+        res.send({ message: "Deleted all Reviews" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all Reviews. ${err.message}`
+        });
+    });
+};
+
 // Find a single Review with a ID
 exports.findOne = (req, res) => {
     Review.findById(req.params.id)

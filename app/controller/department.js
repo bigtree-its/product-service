@@ -83,6 +83,17 @@ exports.findOne = (req, res) => {
         });
 };
 
+// Deletes all
+exports.deleteEverything = (req, res) => {
+    Department.remove().then(result => {
+        res.send({ message: "Deleted all Department" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all Department. ${err.message}`
+        });
+    });
+};
+
 // Update a Department identified by the BrandId in the request
 exports.update = (req, res) => {
     console.log("Updating Department " + JSON.stringify(req.body));

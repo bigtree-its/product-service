@@ -2,9 +2,10 @@
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
-
+const uuid = require('node-uuid');
 // Define a Schema for our product collection
 const OfferSchema = new mongoose.Schema({
+    _id: {type: String, default: uuid.v4},
     name: String, // offer name
     code: String, // offer name
     description: String,
@@ -23,9 +24,7 @@ OfferSchema.plugin(aggregatePaginate);
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Product = mongoose.model('Product', OfferSchema);
-//Ensure mongoose automatically created _id field for the document
-Product._id instanceof mongoose.Types.ObjectId;
+var Offer = mongoose.model('Offer', OfferSchema);
 
 //Export function to create "Product" model class
-module.exports = Product;
+module.exports = Offer;

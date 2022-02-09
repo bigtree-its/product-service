@@ -1,9 +1,12 @@
 //Require Category Model
 const Category = require('../model/category');
+
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
+
 //Require Mongoose
 var mongoose = require('mongoose');
+
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
 
@@ -15,23 +18,6 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    // if (req.body.parent) {
-    //     Category.exists({ "_id": req.body.parent }, function(err, result) {
-    //         if (err) {
-    //             return res.status(400).send({ message: `Parent Category: ${req.body.parent} not found.` });
-    //         } else if (result) {
-    //             checkDuplicateAndPersist(req, res);
-    //         } else {
-    //             console.log(`Cannot create category. The parent category ${req.body.parent} not found`);
-    //             return res.status(400).send({ message: `Cannot create category. The parent category ${req.body.parent} not found` });
-    //         }
-    //     });
-    // } else {
-    // }
-    checkDuplicateAndPersist(req, res);
-};
-
-function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if a Category already exist with name ${req.body.name}`);
     Category.exists({ name: req.body.name }, function(err, result) {
         if (err) {
@@ -43,7 +29,8 @@ function checkDuplicateAndPersist(req, res) {
             persist(req, res);
         }
     });
-}
+};
+
 
 // Retrieve and return all categories from the database.
 exports.findAll = (req, res, next) => {
@@ -74,6 +61,17 @@ exports.findAll = (req, res, next) => {
                 });
             });
     }
+};
+
+// Deletes all
+exports.deleteEverything = (req, res) => {
+    Category.remove().then(result => {
+        res.send({ message: "Deleted all Category" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all Category. ${err.message}`
+        });
+    });
 };
 
 function findTop(req, res) {
@@ -195,10 +193,10 @@ exports.deleteAll = (req, res) => {
 }
 
 /**
- * Persists new Category Model 
+ * Persists new Category 
  * 
  * @param {Request} req The HTTP Request 
- * @param {*Response} res The HTTP Response
+ * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
     console.log(`Attempting to persist Category ` + JSON.stringify(req.body));
@@ -216,7 +214,7 @@ function persist(req, res) {
 /**
  * Builds Category from incoming Request.
  * @returns Category Model
- * @param {*} req 
+ * @param {request} req 
  */
 function buildCategory(req) {
     return new Category(buildCategoryJson(req));
@@ -229,7 +227,7 @@ function buildCategory(req) {
  * @param {Request} req 
  */
 function buildCategoryJson(req) {
-    var data = _.pick(req.body, 'name', 'slug', 'parent', 'department')
+    var data = _.pick(req.body, 'name','image', 'slug', 'parent', 'department')
     if (data.parent && !mongoose.Types.ObjectId.isValid(data.parent)) {
         console.debug(`Parent id is not valid. Hence removing it.`);
         data.parent = "";
@@ -241,6 +239,7 @@ function buildCategoryJson(req) {
 
     return {
         name: data.name,
+        image: data.image,
         slug: data.slug || getSlug(data.name),
         parent: data.parent,
         department: data.department,
