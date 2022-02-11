@@ -16,7 +16,7 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('product').exists().isUUID().withMessage('Product is not valid'),
-            check('title').notEmpty().isLength({ min: 2, max: 20 }),
+            check('title').notEmpty().isLength({ min: 2, max: 50 }),
             check('active').notEmpty().isBoolean().withMessage('Active field not valid'),
             check('coming').notEmpty().isBoolean().withMessage('Coming field not valid')
         ],
