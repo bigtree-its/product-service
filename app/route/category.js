@@ -16,7 +16,7 @@ module.exports = (app) => {
         // verifyToken,
         [
             check('name').notEmpty().isLength({ min: 2, max: 40 }),
-            check('parent').optional().isUUID().withMessage('Parent Category ID is not valid'),
+            // check('parent').optional().isUUID().withMessage('Parent Category ID is not valid'),
             check('department').optional().isUUID().withMessage('Department ID is not valid')
         ],
         collection.create);
@@ -26,7 +26,7 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 2, max: 20 }),
-            check('parent').optional().isUUID().withMessage('Parent Category ID is not valid'),
+            // check('parent').optional().isUUID().withMessage('Parent Category ID is not valid'),
             check('department').optional().isUUID().withMessage('Department ID is not valid')
         ],
         collection.update);

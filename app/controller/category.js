@@ -7,30 +7,62 @@ const _ = require('underscore');
 //Require Mongoose
 var mongoose = require('mongoose');
 
+const Department = require('../model/department');
+
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
 
+const { check } = require('express-validator');
+
+var validator = require('validator');
+
 // Create and Save a new Category
 exports.create = (req, res) => {
-    console.log("Creating new Category " + JSON.stringify(req.body));
+    console.log("Request received to create new Category " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    console.log(`Checking if a Category already exist with name ${req.body.name}`);
-    Category.exists({ name: req.body.name }, function(err, result) {
-        if (err) {
-            return res.status(500).send({ message: `Error while finding Category with name ${req.body.name}` });
-        } else if (result) {
-            console.log(`Category already exist with name ${req.body.name}`);
-            res.status(400).send({ message: `Category ${req.body.name} already exist.` });
-        } else {
-            persist(req, res);
-        }
-    });
+    /** Validate if the given department is correct */
+    this.validateDepartment(req, res);
+
 };
 
+exports.validateDepartment = async (req, res) => {
+    try {
+        var departmentId = req.body.department;
+        console.log(`Validating department ${departmentId}`);
+        Department.findById(departmentId)
+            .then(Department => {
+                if (!Department) {
+                    return res.status(404).send({ message: `Department not found with id ${departmentId}` });
+                }
+                console.log(`Checking if a Category already exist with name ${req.body.name}`);
+                Category.exists({ name: req.body.name }, function (err, result) {
+                    if (err) {
+                        return res.status(500).send({ message: `Error while finding Category with name ${req.body.name}` });
+                    } else if (result) {
+                        console.log(`Category already exist with name ${req.body.name}`);
+                        res.status(400).send({ message: `Category ${req.body.name} already exist.` });
+                    } else {
+                        persist(req, res);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error( `Error while retrieving Department with id ${departmentId}. Error: ${err}`);
+                if (err.kind === 'ObjectId') {
+                    return res.status(404).send({ message: `Department not found with id ${departmentId}` });
+                }
+                return res.status(500).send({ message: `Error while retrieving Department with id ${departmentId}` });
+            });
+    } catch (error) {
+        console.log("Error: " + error);
+        return res.status(400).send({ message: `Cannot find department with Id ${departmentId}` });
+    }
+
+};
 
 // Retrieve and return all categories from the database.
 exports.findAll = (req, res, next) => {
@@ -88,7 +120,7 @@ function findTop(req, res) {
 
 function findAllByParent(req, res) {
     var parent = req.query.parent;
-    if (mongoose.Types.ObjectId.isValid(parent)) {
+    if (validator.isUUID(parent, 4)) {
         console.log(`Received request to get all sub categories of ${req.query.parent}`);
         Category.find({ parent: parent }).then(data => {
             console.log('Returning ' + data.length + ' sub categories of ' + parent);
@@ -102,7 +134,7 @@ function findAllByParent(req, res) {
 
 async function findAllByDepartment(req, res) {
     var department = req.query.department;
-    if (mongoose.Types.ObjectId.isValid(department)) {
+    if (validator.isUUID(department,4)) {
         Category.find({ department: req.query.department })
             .then(data => {
                 res.send(data);
@@ -199,14 +231,15 @@ exports.deleteAll = (req, res) => {
  * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
-    console.log(`Attempting to persist Category ` + JSON.stringify(req.body));
     const category = buildCategory(req);
+    console.log(`Attempting to persist Category ` + JSON.stringify(category));
     // Save Category in the database
     category.save()
         .then(data => {
             console.log(`Persisted Category: ${data._id}`);
             res.status(201).send(data);
         }).catch(err => {
+            console.error( `Error while saving category. Error: ${err}`);
             res.status(500).send({ message: err.message || "Some error occurred while creating the Category." });
         });
 }
@@ -227,15 +260,15 @@ function buildCategory(req) {
  * @param {Request} req 
  */
 function buildCategoryJson(req) {
-    var data = _.pick(req.body, 'name','image', 'slug', 'parent', 'department')
-    if (data.parent && !mongoose.Types.ObjectId.isValid(data.parent)) {
-        console.debug(`Parent id is not valid. Hence removing it.`);
-        data.parent = "";
-    }
-    if (data.department && !mongoose.Types.ObjectId.isValid(data.department)) {
-        console.debug(`Department id is not valid. Hence removing it.`);
-        data.department = "";
-    }
+    var data = _.pick(req.body, 'name', 'image', 'slug', 'parent', 'department', 'parentCategory')
+    // if (data.parent && !validator.isUUID(data.parent,4)) {
+    //     console.debug(`Parent id is not valid. Hence removing it.`);
+    //     data.parent = "";
+    // }
+    // if (data.department && !validator.isUUID(data.department,4)) {
+    //     console.debug(`Department id is not valid. Hence removing it.`);
+    //     data.department = "";
+    // }
 
     return {
         name: data.name,
@@ -243,6 +276,7 @@ function buildCategoryJson(req) {
         slug: data.slug || getSlug(data.name),
         parent: data.parent,
         department: data.department,
+        parentCategory: data.parentCategory,
     };
 }
 /**
