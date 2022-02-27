@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema({
     description: [String],
     tags: [String],
     categories: [{
-        type: mongoose.Schema.Types.String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     }],
     price: { type: Number },// Product's original price. Enter a lower value into SalePrice.
